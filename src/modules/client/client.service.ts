@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { ClientEntity } from '@/modules/client/client.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 
 @Injectable()
-export class ClientService {
+export class ClientService extends TypeOrmCrudService<ClientEntity> {
   constructor(
     @InjectRepository(ClientEntity)
-    private readonly repository: Repository<ClientEntity>
+    public readonly repo: Repository<ClientEntity>,
   ) {
+    super(repo);
   }
-   getHello(): Promise<ClientEntity[]> {
-    return this.repository.find();
-  }
+
 }

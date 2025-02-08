@@ -1,13 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ClientService } from '@/modules/client/client.service';
 import { ClientEntity } from '@/modules/client/client.entity';
+import { Crud } from '@dataui/crud';
 
-@Controller()
-export class ClientController {
-  constructor(private readonly clientService: ClientService) {}
-
-  @Get()
-  getHello(): Promise<ClientEntity[]> {
-    return this.clientService.getHello();
+@Crud({
+  model:{
+    type: ClientEntity
   }
+})
+@Controller('/api/client')
+export class ClientController {
+  constructor(private readonly service: ClientService) {}
 }
