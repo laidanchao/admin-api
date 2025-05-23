@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, Relation, Tree, TreeChildren, TreeParent } from 'typeorm';
 import { CompleteEntity } from '@/common/basic.entity';
-import { UserEntity } from '@/modules/system/user/user.entity';
+import { UserEntity } from '@/modules/sys/user/user.entity';
 
 
 @Entity({ name: 'sys_dept' })

@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ClientModule } from '@/modules/client/client.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { dataSourceOptions } from '@/config/database.config';
+import { SystemModule } from '@/modules/sys/system.module';
+import { CrmModule } from '@/modules/crm/crm.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { dataSourceOptions } from '@/config/database.config';
       inject: [ConfigService],
       useFactory: () => dataSourceOptions,
     }),
-    ClientModule
+    SystemModule,
+    CrmModule,
   ],
 })
 export class AppModule {

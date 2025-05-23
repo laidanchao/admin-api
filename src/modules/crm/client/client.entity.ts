@@ -2,7 +2,7 @@ import { CompleteEntity } from '@/common/basic.entity';
 import { Column, Entity } from 'typeorm';
 import { ClientType } from '@/common/enums';
 
-@Entity({ name: 'client' })
+@Entity({ name: 'crm_client' })
 export class ClientEntity extends CompleteEntity {
   @Column({ unique: true })
   clientName: string;

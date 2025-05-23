@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
-import { ClientService } from '@/modules/client/client.service';
-import { ClientEntity } from '@/modules/client/client.entity';
+import { ClientService } from '@/modules/crm/client/client.service';
+import { ClientEntity } from '@/modules/crm/client/client.entity';
 import { Crud } from '@dataui/crud';
 
 @Crud({

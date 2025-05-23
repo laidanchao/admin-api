@@ -1,8 +1,8 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, Relation } from 'typeorm';
 import { CompleteEntity } from '@/common/basic.entity';
-import { RoleEntity } from '@/modules/system/role/role.entity';
-import { DeptEntity } from '@/modules/system/dept/dept.entity';
+import { RoleEntity } from '@/modules/sys/role/role.entity';
+import { DeptEntity } from '@/modules/sys/dept/dept.entity';
 import { UserStatus } from '@/common/enums';
 
 @Entity({ name: 'sys_user' })
