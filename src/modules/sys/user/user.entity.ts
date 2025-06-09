@@ -6,33 +6,33 @@ import { DeptEntity } from '@/modules/sys/dept/dept.entity';
 import { UserStatus } from '@/common/enums';
 
 @Entity({ name: 'sys_user' })
-export class UserEntity extends CompleteEntity {  @Column({ unique: true })
-username: string;
+export class UserEntity extends CompleteEntity {
+  @Column({ unique: true, length: 50 })
+  username: string;
 
   @Exclude()
-  @Column()
+  @Column({ length: 100 })
   password: string;
 
-
-  @Column({ unique: true })
+  @Column({ unique: true, length: 10, comment: '工号' })
   userNo: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 50 })
   nickname: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, comment: '头像url' })
   avatar: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 20 })
   qq: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 50 })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 20 })
   phone: string;
 
-  @Column({ nullable: true, default: UserStatus.NORMAL })
+  @Column({ nullable: true, default: UserStatus.NORMAL, length: 20 })
   status: UserStatus;
 
   @ManyToMany(() => RoleEntity, role => role.users)

@@ -8,10 +8,10 @@ export class RoleEntity extends CompleteEntity {
   @Column({ length: 50, unique: true })
   name: string;
 
-  @Column({ unique: true, comment: '角色编号' })
+  @Column({ unique: true, comment: '角色编号', length: 50 })
   code: string;
 
-  @Column({ nullable: true,comment:'角色描述' })
+  @Column({ nullable: true, comment: '角色描述' })
   description: string;
 
   @ManyToMany(() => UserEntity, user => user.roles)

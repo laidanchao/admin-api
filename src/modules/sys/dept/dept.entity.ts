@@ -6,7 +6,7 @@ import { UserEntity } from '@/modules/sys/user/user.entity';
 @Entity({ name: 'sys_dept' })
 @Tree('materialized-path')
 export class DeptEntity extends CompleteEntity {
-  @Column()
+  @Column({ length: 50 })
   name: string;
 
   @TreeChildren({ cascade: true })
