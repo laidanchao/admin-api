@@ -1,62 +1,72 @@
 import { Injectable } from '@nestjs/common';
-import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Repository } from 'typeorm';
+import { TreeRepository } from 'typeorm';
 import { DeptEntity } from '@/modules/sys/dept/dept.entity';
-import { DeptTreeDto } from '@/modules/sys/dept/dept.dto';
+import { AddDeptDto, UpdateDeptDto } from '@/modules/sys/dept/dept.dto';
 
 @Injectable()
-export class DeptService extends TypeOrmCrudService<DeptEntity> {
+export class DeptService {
   constructor(
     @InjectRepository(DeptEntity)
-    public readonly repo: Repository<DeptEntity>,
+    public readonly repo: TreeRepository<DeptEntity>,
   ) {
-    super(repo);
   }
 
+  /**
+   * 查询完整部门树
+   */
+  async findFullTree() {
+    const tree = await this.repo.findTrees();
+    return tree[0] || [];
+  }
 
-  async getAll() {
-    const rootDepts = await this.repo.find({
-      where:{
-        parent: IsNull()
+  /**
+   * 查询指定起始节点的部门树
+   * @param id
+   */
+  async findTree(id: number) {
+    const dept = await this.repo.findOneByOrFail({ id });
+    return await this.repo.findDescendantsTree(dept);
+  }
+
+  /**
+   * 添加部门
+   * @param dto
+   */
+  async addOne(dto: AddDeptDto) {
+    const parentDept = await this.repo.findOneOrFail({
+      where: {
+        id: dto.parentId,
       },
-      relations:['children']
+      relations: ['children'],
     });
 
-    const tree = this.buildTree(rootDepts);
-    return tree;
+    const dept = new DeptEntity();
+    dept.name = dto.name;
+    dept.createBy = 'ldc';
+    dept.updateBy = 'ldc';
+    dept.parent = parentDept;
+    return await this.repo.save(dept);
   }
-  /*
-   [
-        {
-            "value": "1",
-            "label": "有来技术",
-            "children": [
-                {
-                    "value": "2",
-                    "label": "研发部门"
-                },
-                {
-                    "value": "3",
-                    "label": "测试部门"
-                }
-            ]
-        }
-    ]
-   */
-  // private async buildTree(depts:DeptEntity[],parentId=null): Promise<DeptTreeDto[]>{
-  //   const tree = [];
-  //   for (const dept of depts) {
-  //     if(dept.parentId)
-  //   }
-  // }
 
-  private buildTree(depts: DeptEntity[]): any[] {
-    return depts.map((dept) => ({
-      value: dept.id,
-      label: dept.name,
-      children: dept.children ? this.buildTree(dept.children) : null,
-    }));
+  async updateOne(id: number, dto: UpdateDeptDto) {
+    let parentDept;
+    if (dto.parentId) {
+      parentDept = await this.repo.findOneOrFail({
+        where: {
+          id: dto.parentId,
+        },
+        relations: ['children'],
+      });
+    }
+
+    const dept = new DeptEntity();
+    dept.name = dto.name;
+    dept.createBy = 'ldc';
+    dept.updateBy = 'ldc';
+    dept.parent = parentDept;
+    return await this.repo.update(id, dept);
   }
+
 
 }

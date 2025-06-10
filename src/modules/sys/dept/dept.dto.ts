@@ -1,3 +1,4 @@
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 
 export class DeptTreeDto{
@@ -7,4 +8,22 @@ export class DeptTreeDto{
   label: string;
   // 子部门
   children?: DeptTreeDto[]
+}
+
+export class AddDeptDto{
+  @IsString()
+  @IsNotEmpty()
+  name:string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  parentId:number;
+}
+
+export class UpdateDeptDto{
+  @IsString()
+  name:string;
+
+  @IsNumber()
+  parentId:number;
 }

@@ -9,6 +9,9 @@ export class DeptEntity extends CompleteEntity {
   @Column({ length: 50 })
   name: string;
 
+  @Column({ nullable: true })
+  parentId?: number;
+
   @TreeChildren({ cascade: true })
   children: DeptEntity[];
 
