@@ -23,5 +23,5 @@ export class RoleEntity extends CompleteEntity {
     joinColumn: { name: 'role_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'menu_id', referencedColumnName: 'id' },
   })
-  menus: Relation<MenuEntity[]>;
+  menus: MenuEntity[];
 }
