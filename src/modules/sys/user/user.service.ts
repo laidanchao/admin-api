@@ -38,9 +38,9 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
       },
       relations: ['roles', 'roles.menus'],
     });
-    if(user.roles[0].code==='ADMIN'){
+    if (user.roles[0].code === 'ADMIN') {
       return await this.menuService.find();
-    }else{
+    } else {
       return chain(user.roles).flatMap('menus').uniqBy('id').value();
     }
   }

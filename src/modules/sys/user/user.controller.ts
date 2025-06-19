@@ -18,7 +18,7 @@ export class UserController {
    * @param id
    */
   @Get('getMenuTree/:id')
-  async getMenuTree(@Param('id') id:number){
+  async getMenuTree(@Param('id') id: number) {
     return await this.service.getMenuTree(id);
   }
 
