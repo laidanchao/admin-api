@@ -2,12 +2,14 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC } from '@/common/public.decorator';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private cls: ClsService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -26,6 +28,7 @@ export class JwtAuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token);
+      this.cls.set('user',payload);
       request['user'] = payload;
     } catch(e) {
       throw new UnauthorizedException('token有误');

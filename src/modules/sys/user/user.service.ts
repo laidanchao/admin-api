@@ -6,12 +6,13 @@ import { UserEntity } from '@/modules/sys/user/user.entity';
 import { chain } from 'lodash';
 import { MenuEntity } from '@/modules/sys/menu/menu.entity';
 import { MenuService } from '@/modules/sys/menu/menu.service';
+import { BaseCrudService } from '@/common/base-crud.service';
 
 @Injectable()
-export class UserService extends TypeOrmCrudService<UserEntity> {
+export class UserService extends BaseCrudService<UserEntity> {
   constructor(
     @InjectRepository(UserEntity)
-    public readonly repo: Repository<UserEntity>,
+    protected readonly repo: Repository<UserEntity>,
     private readonly menuService: MenuService,
   ) {
     super(repo);

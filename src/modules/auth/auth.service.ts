@@ -20,17 +20,13 @@ export class AuthService {
    * @param body
    */
   async login(username: string, password: string) {
-    const user = await this.userRepo.findOneBy({ username });
+    const user = await this.userRepo.findOneBy({ username, password });
     if(!user){
-      throw new BadRequestException('用户不存在');
+      throw new BadRequestException('用户或密码有误');
     }
 
     if(user.status !== UserStatus.NORMAL){
       throw new BadRequestException('用户状态异常');
-    }
-
-    if (user.password !== password) {
-      throw new BadRequestException('密码有误');
     }
 
     return this.jwtService.sign(pick(user,['id','username']));

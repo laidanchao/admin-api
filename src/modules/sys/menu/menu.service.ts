@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MenuEntity } from '@/modules/sys/menu/menu.entity';
 import { MenuTreeNode } from '@/modules/sys/menu/menu.dto';
+import { BaseCrudService } from '@/common/base-crud.service';
 
 @Injectable()
-export class MenuService extends TypeOrmCrudService<MenuEntity> {
+export class MenuService extends BaseCrudService<MenuEntity> {
   constructor(
     @InjectRepository(MenuEntity)
     public readonly repo: Repository<MenuEntity>,

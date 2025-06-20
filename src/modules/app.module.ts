@@ -5,6 +5,7 @@ import { dataSourceOptions } from '@/config/database.config';
 import { SystemModule } from '@/modules/sys/system.module';
 import { CrmModule } from '@/modules/crm/crm.module';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { ClsModule } from 'nestjs-cls';
 
 @Module({
   imports: [
@@ -12,6 +13,10 @@ import { AuthModule } from '@/modules/auth/auth.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: () => dataSourceOptions,
+    }),
+    ClsModule.forRoot({
+      global: true,
+      middleware: { mount: true } // 启用中间件
     }),
     AuthModule,
     SystemModule,

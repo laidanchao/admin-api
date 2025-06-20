@@ -11,7 +11,7 @@ export class UserEntity extends CompleteEntity {
   username: string;
 
   @Exclude()
-  @Column({ length: 100 })
+  @Column({ length: 100, select: false })
   password: string;
 
   @Column({ unique: true, length: 10, comment: '工号' })
