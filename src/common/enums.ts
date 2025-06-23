@@ -4,8 +4,10 @@ export enum UserStatus {
 }
 
 export enum MenuType {
-  'MENU' = 'MENU', // 仅仅是菜单栏
-  'PAGE' = 'PAGE' // 具体的页面
+  'CATALOG' = 'CATALOG', // 目录
+  'MENU' = 'MENU', // 菜单
+  'BUTTON' = 'BUTTON', // 按钮
+  'LINK' = 'LINK', // 外链
 }
 
 export enum ClientType{

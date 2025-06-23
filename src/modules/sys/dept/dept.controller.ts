@@ -11,7 +11,7 @@ export class DeptController {
   /**
    * 查询完整部门树
    */
-  @Get('findFullTree')
+  @Get('getFullTree')
   async findFullTree() {
     return await this.service.findFullTree();
   }
@@ -19,7 +19,7 @@ export class DeptController {
   /**
    * 查询指定起始节点的部门树
    */
-  @Get('findTree/:id')
+  @Get('getTree/:id')
   async findTree(@Param('id') id:number) {
     return await this.service.findTree(id);
   }

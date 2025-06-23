@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 import { UserEntity } from '@/modules/sys/user/user.entity';
 import { chain } from 'lodash';
 import { MenuEntity } from '@/modules/sys/menu/menu.entity';
@@ -12,7 +11,7 @@ import { BaseCrudService } from '@/common/base-crud.service';
 export class UserService extends BaseCrudService<UserEntity> {
   constructor(
     @InjectRepository(UserEntity)
-    protected readonly repo: Repository<UserEntity>,
+    public readonly repo: Repository<UserEntity>,
     private readonly menuService: MenuService,
   ) {
     super(repo);
@@ -32,14 +31,14 @@ export class UserService extends BaseCrudService<UserEntity> {
    * 根据用户id获取所有菜单
    * @param id
    */
-  private async getMenusByUserId(id: number): Promise<MenuEntity[]> {
+  async getMenusByUserId(id: number): Promise<MenuEntity[]> {
     const user = await this.repo.findOneOrFail({
       where: {
         id,
       },
       relations: ['roles', 'roles.menus'],
     });
-    if (user.roles[0].code === 'ADMIN') {
+    if (user.roles[0].code === 'ROOT') {
       return await this.menuService.find();
     } else {
       return chain(user.roles).flatMap('menus').uniqBy('id').value();
