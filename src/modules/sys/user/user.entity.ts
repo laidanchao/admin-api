@@ -20,6 +20,9 @@ export class UserEntity extends CompleteEntity {
   @Column({ nullable: true, length: 50 })
   nickname: string;
 
+  @Column({ length: 10 })
+  gender: string;
+
   @Column({ nullable: true, comment: '头像url' })
   avatar: string;
 

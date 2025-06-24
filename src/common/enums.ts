@@ -10,7 +10,12 @@ export enum MenuType {
   'LINK' = 'LINK', // 外链
 }
 
-export enum ClientType{
-  'PERSONAL'='PERSONAL',
-  'COMPANY'='COMPANY'
+export enum ClientType {
+  'PERSONAL' = 'PERSONAL',
+  'COMPANY' = 'COMPANY'
+}
+
+export enum Gender {
+  'MALE' = 'MALE',
+  'FEMALE' = 'FEMALE'
 }
