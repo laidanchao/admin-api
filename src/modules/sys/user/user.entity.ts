@@ -38,6 +38,9 @@ export class UserEntity extends CompleteEntity {
   @Column({ nullable: true, default: UserStatus.NORMAL, length: 20 })
   status: UserStatus;
 
+  @Column({ nullable: true })
+  deptId: number;
+
   @ManyToMany(() => RoleEntity, role => role.users)
   @JoinTable({
     name: 'sys_user_roles',

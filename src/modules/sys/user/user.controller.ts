@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { Crud } from '@dataui/crud';
 import { UserService } from '@/modules/sys/user/user.service';
 import { UserEntity } from '@/modules/sys/user/user.entity';
@@ -8,10 +8,12 @@ import { User, UserDto } from '@/common/user.decorator';
   model: {
     type: UserEntity,
   },
-  query:{
-    join:{
-      dept:{}
-    }
+  query: {
+    join: {
+      dept: {
+        eager: true
+      },
+    },
   },
 })
 @Controller('/api/sys/user')

@@ -18,7 +18,6 @@ export class BaseCrudService<T extends ObjectLiteral> extends TypeOrmCrudService
   async createOne(req: CrudRequest, dto: T): Promise<T> {
     const user: UserDto = this.cls.get('user');
     if (user?.username) {
-      (dto as any).id = req.parsed.paramsFilter[0].value;
       (dto as any).createBy = user.username;
     }
     return super.createOne(req, dto);
