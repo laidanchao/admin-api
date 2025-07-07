@@ -8,7 +8,7 @@ import { UserDto } from '@/common/user.decorator';
 @Injectable()
 export class BaseCrudService<T extends ObjectLiteral> extends TypeOrmCrudService<T> {
   @Inject(ClsService)
-  private readonly cls: ClsService
+  protected readonly cls: ClsService
   constructor(
     protected readonly repo: Repository<T>,
   ) {

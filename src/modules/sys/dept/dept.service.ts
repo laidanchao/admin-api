@@ -15,7 +15,7 @@ export class DeptService {
   /**
    * 查询完整部门树
    */
-  async findFullTree() {
+  async getFullTree() {
     const tree = await this.repo.findTrees();
     return this._convertToTreeDto(tree);
   }
@@ -24,9 +24,19 @@ export class DeptService {
    * 查询指定起始节点的部门树
    * @param id
    */
-  async findTree(id: number) {
+  async getTree(id: number) {
     const dept = await this.repo.findOneByOrFail({ id });
-    return await this.repo.findDescendantsTree(dept);
+    const tree = await this.repo.findDescendantsTree(dept);
+    return this._convertToTreeDto([tree]);
+  }
+
+  /**
+   * 查询指定部门的所有子部门
+   * @param id
+   */
+  async getChildren(id: number) {
+    const dept = await this.repo.findOneByOrFail({ id });
+    return await this.repo.findDescendants(dept);
   }
 
   /**
@@ -36,7 +46,7 @@ export class DeptService {
    */
   private _convertToTreeDto(depts: DeptEntity[]): DeptTreeDto[] {
     return depts.map(dept => ({
-      value: dept.id.toString(), // 将id转换为字符串
+      value: dept.id, // 将id转换为字符串
       label: dept.name,
       children: dept.children && dept.children.length > 0
         ? this._convertToTreeDto(dept.children)
@@ -82,6 +92,7 @@ export class DeptService {
     dept.parent = parentDept;
     return await this.repo.update(id, dept);
   }
+
 
 
 }

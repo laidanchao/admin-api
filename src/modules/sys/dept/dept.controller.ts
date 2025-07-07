@@ -12,16 +12,24 @@ export class DeptController {
    * 查询完整部门树
    */
   @Get('getFullTree')
-  async findFullTree() {
-    return await this.service.findFullTree();
+  async getFullTree() {
+    return await this.service.getFullTree();
   }
 
   /**
    * 查询指定起始节点的部门树
    */
   @Get('getTree/:id')
-  async findTree(@Param('id') id:number) {
-    return await this.service.findTree(id);
+  async getTree(@Param('id') id:number) {
+    return await this.service.getTree(id);
+  }
+
+  /**
+   * 查询指定部门的所有子部门
+   */
+  @Get('getChildren/:id')
+  async getChildren(@Param('id') id:number) {
+    return await this.service.getChildren(id);
   }
 
   /**

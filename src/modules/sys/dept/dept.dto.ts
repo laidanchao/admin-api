@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class DeptTreeDto{
   // 部门id
-  value: string;
+  value: string | number;
   // 部门名称
   label: string;
   // 子部门

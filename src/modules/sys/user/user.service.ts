@@ -1,18 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '@/modules/sys/user/user.entity';
-import { chain } from 'lodash';
+import { chain, padStart } from 'lodash';
 import { MenuEntity } from '@/modules/sys/menu/menu.entity';
 import { MenuService } from '@/modules/sys/menu/menu.service';
-import { BaseCrudService } from '@/common/base-crud.service';
+import { CreateUserDto, UpdateUserDto } from '@/modules/sys/user/user.dto';
+import { RoleEntity } from '@/modules/sys/role/role.entity';
+import { DeptEntity } from '@/modules/sys/dept/dept.entity';
+import { ClsService } from 'nestjs-cls';
+import { UserDto } from '@/common/user.decorator';
+import { TypeOrmCrudService } from '@dataui/crud-typeorm';
+import { MenuTreeNode } from '@/modules/sys/menu/menu.dto';
 
 @Injectable()
-export class UserService extends BaseCrudService<UserEntity> {
+export class UserService extends TypeOrmCrudService<UserEntity> {
   constructor(
     @InjectRepository(UserEntity)
     public readonly repo: Repository<UserEntity>,
+    private datasource: DataSource,
     private readonly menuService: MenuService,
+    private cls: ClsService,
   ) {
     super(repo);
   }
@@ -21,7 +29,7 @@ export class UserService extends BaseCrudService<UserEntity> {
    * 获取用户所有菜单的树
    * @param id
    */
-  async getMenuTree(id: number) {
+  async getMenuTree(id: number): Promise<MenuTreeNode[]> {
     const menus = await this.getMenusByUserId(id);
     const tree = this.menuService.buildMenuTree(menus);
     return tree;
@@ -43,5 +51,120 @@ export class UserService extends BaseCrudService<UserEntity> {
     } else {
       return chain(user.roles).flatMap('menus').uniqBy('id').value();
     }
+  }
+
+  /**
+   * 获取指定用户信息
+   * @param id
+   */
+  async getUserInfo(id: number) {
+    const user = await this.repo.findOneOrFail({
+      where: {
+        id,
+      },
+      relations: ['roles'],
+    });
+
+    return {
+      ...user,
+      roleIds: user.roles.map(m => m.id),
+    };
+  }
+
+  /**
+   * 创建用户
+   * @param body
+   */
+  async createUser(body: CreateUserDto) {
+    const roles = await this.datasource.getRepository(RoleEntity).findBy({
+      id: In(body.roleIds),
+    });
+
+    const dept = await this.datasource.getRepository(DeptEntity).findOneByOrFail({
+      id: body.deptId,
+    });
+    const operator: UserDto = this.cls.get('user');
+
+    return await this.repo.save({
+      username: body.username,
+      password: body.password,
+      userNo: body.userNo,
+      nickname: body.nickname,
+      gender: body.gender,
+      avatar: body.avatar,
+      qq: body.qq,
+      email: body.email,
+      phone: body.phone,
+      status: body.status,
+      dept,
+      roles,
+      createBy: operator.username,
+      updateBy: operator.username,
+    });
+  }
+
+  /**
+   * 更新用户
+   * @param id
+   * @param body
+   */
+  async updateUser(id: number, body: UpdateUserDto) {
+
+    const user = await this.repo.findOneByOrFail({ id });
+
+    const roles = await this.datasource.getRepository(RoleEntity).findBy({
+      id: In(body.roleIds),
+    });
+
+    const dept = await this.datasource.getRepository(DeptEntity).findOneByOrFail({
+      id: body.deptId,
+    });
+
+    const operator: UserDto = this.cls.get('user');
+
+    user.password = body.password;
+    user.nickname = body.nickname;
+    user.gender = body.gender;
+    user.avatar = body.avatar;
+    user.qq = body.qq;
+    user.email = body.email;
+    user.phone = body.phone;
+    user.status = body.status;
+    user.dept = dept;
+    user.roles = roles;
+    user.updateBy = operator.username;
+
+    return await this.repo.save(user);
+  }
+
+  /**
+   * 获取工号
+   */
+  async getUserNo() {
+
+    const [user] = await this.repo.find({
+      order: {
+        userNo: 'DESC',
+      },
+      take: 1,
+    });
+    const n = user?.userNo || '000';
+
+    const newUserNo = padStart((Number(n) + 1).toString(), 3, '0');
+
+    return newUserNo;
+  }
+
+  /**
+   * 重置用户密码
+   * @param id
+   * @param password
+   */
+  async resetPassword(id: number, password: string) {
+    const operator: UserDto = this.cls.get('user');
+    return this.repo.update(id, {
+      password,
+      updateBy: operator.username,
+    });
   }
 }
