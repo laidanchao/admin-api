@@ -11,8 +11,8 @@ import { MenuEntity } from '@/modules/sys/menu/menu.entity';
   model: {
     type: UserEntity,
   },
-  routes:{
-    only:['getManyBase','getOneBase']
+  routes: {
+    only: ['getManyBase', 'getOneBase'],
   },
   query: {
     join: {
@@ -71,20 +71,22 @@ export class UserController {
   /**
    * 创建用户
    * @param body
+   * @param user
    */
   @Post('createUser')
-  async createUser(@Body() body: CreateUserDto) {
-    return await this.service.createUser(body);
+  async createUser(@Body() body: CreateUserDto, @User() user: UserDto) {
+    return await this.service.createUser(body, user);
   }
 
   /**
    * 更新用户
    * @param id
    * @param body
+   * @param user
    */
   @Post('updateUser/:id')
-  async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto) {
-    return await this.service.updateUser(id, body);
+  async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto, @User() user: UserDto) {
+    return await this.service.updateUser(id, body, user);
   }
 
   /**
@@ -101,8 +103,8 @@ export class UserController {
    * @param body
    */
   @Post('resetPassword/:id')
-  async resetPassword(@Param('id') id: number, @Body() body: { password: string }) {
-    return await this.service.resetPassword(id, body.password);
+  async resetPassword(@Param('id') id: number, @Body() body: { password: string }, @User() user: UserDto) {
+    return await this.service.resetPassword(id, body.password, user);
   }
 
   /**
@@ -111,7 +113,7 @@ export class UserController {
    * @param ids
    */
   @Post('deleteByIds')
-  async deleteByIds(@Param('id') id: number, @Body() ids:number[]) {
+  async deleteByIds(@Param('id') id: number, @Body() ids: number[]) {
     return await this.service.repo.delete(ids);
   }
 

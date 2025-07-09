@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { MenuService } from '@/modules/sys/menu/menu.service';
 import { Crud } from '@dataui/crud';
 import { MenuEntity } from '@/modules/sys/menu/menu.entity';
@@ -16,4 +16,13 @@ import { AddMenuDto } from '@/modules/sys/menu/menu.dto';
 export class MenuController {
   constructor(private readonly service: MenuService) {
   }
+
+  /**
+   * 查询完整菜单树
+   */
+  @Get('getFullTree')
+  async getFullTree() {
+    return await this.service.getFullTree();
+  }
+
 }

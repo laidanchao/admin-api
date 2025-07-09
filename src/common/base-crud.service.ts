@@ -19,6 +19,7 @@ export class BaseCrudService<T extends ObjectLiteral> extends TypeOrmCrudService
     const user: UserDto = this.cls.get('user');
     if (user?.username) {
       (dto as any).createBy = user.username;
+      (dto as any).updateBy = user.username;
     }
     return super.createOne(req, dto);
   }

@@ -8,7 +8,6 @@ import { MenuService } from '@/modules/sys/menu/menu.service';
 import { CreateUserDto, UpdateUserDto } from '@/modules/sys/user/user.dto';
 import { RoleEntity } from '@/modules/sys/role/role.entity';
 import { DeptEntity } from '@/modules/sys/dept/dept.entity';
-import { ClsService } from 'nestjs-cls';
 import { UserDto } from '@/common/user.decorator';
 import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 import { MenuTreeNode } from '@/modules/sys/menu/menu.dto';
@@ -20,7 +19,6 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     public readonly repo: Repository<UserEntity>,
     private datasource: DataSource,
     private readonly menuService: MenuService,
-    private cls: ClsService,
   ) {
     super(repo);
   }
@@ -75,7 +73,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
    * 创建用户
    * @param body
    */
-  async createUser(body: CreateUserDto) {
+  async createUser(body: CreateUserDto, operator: UserDto) {
     const roles = await this.datasource.getRepository(RoleEntity).findBy({
       id: In(body.roleIds),
     });
@@ -83,7 +81,6 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     const dept = await this.datasource.getRepository(DeptEntity).findOneByOrFail({
       id: body.deptId,
     });
-    const operator: UserDto = this.cls.get('user');
 
     return await this.repo.save({
       username: body.username,
@@ -107,8 +104,9 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
    * 更新用户
    * @param id
    * @param body
+   * @param operator
    */
-  async updateUser(id: number, body: UpdateUserDto) {
+  async updateUser(id: number, body: UpdateUserDto, operator: UserDto) {
 
     const user = await this.repo.findOneByOrFail({ id });
 
@@ -119,8 +117,6 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     const dept = await this.datasource.getRepository(DeptEntity).findOneByOrFail({
       id: body.deptId,
     });
-
-    const operator: UserDto = this.cls.get('user');
 
     user.password = body.password;
     user.nickname = body.nickname;
@@ -160,8 +156,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
    * @param id
    * @param password
    */
-  async resetPassword(id: number, password: string) {
-    const operator: UserDto = this.cls.get('user');
+  async resetPassword(id: number, password: string, operator: UserDto) {
     return this.repo.update(id, {
       password,
       updateBy: operator.username,

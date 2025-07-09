@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreeRepository } from 'typeorm';
 import { DeptEntity } from '@/modules/sys/dept/dept.entity';
-import { AddDeptDto, DeptTreeDto, UpdateDeptDto } from '@/modules/sys/dept/dept.dto';
+import { AddDeptDto, UpdateDeptDto } from '@/modules/sys/dept/dept.dto';
+import Utils from '@/common/utils';
 
 @Injectable()
 export class DeptService {
@@ -16,8 +17,8 @@ export class DeptService {
    * 查询完整部门树
    */
   async getFullTree() {
-    const tree = await this.repo.findTrees();
-    return this._convertToTreeDto(tree);
+    const trees = await this.repo.findTrees();
+    return Utils.convertToTreeDto(trees);
   }
 
   /**
@@ -27,7 +28,7 @@ export class DeptService {
   async getTree(id: number) {
     const dept = await this.repo.findOneByOrFail({ id });
     const tree = await this.repo.findDescendantsTree(dept);
-    return this._convertToTreeDto([tree]);
+    return Utils.convertToTreeDto([tree]);
   }
 
   /**
@@ -37,21 +38,6 @@ export class DeptService {
   async getChildren(id: number) {
     const dept = await this.repo.findOneByOrFail({ id });
     return await this.repo.findDescendants(dept);
-  }
-
-  /**
-   *
-   * @param depts
-   * @private
-   */
-  private _convertToTreeDto(depts: DeptEntity[]): DeptTreeDto[] {
-    return depts.map(dept => ({
-      value: dept.id, // 将id转换为字符串
-      label: dept.name,
-      children: dept.children && dept.children.length > 0
-        ? this._convertToTreeDto(dept.children)
-        : [],
-    }));
   }
 
   /**
@@ -92,7 +78,6 @@ export class DeptService {
     dept.parent = parentDept;
     return await this.repo.update(id, dept);
   }
-
 
 
 }
