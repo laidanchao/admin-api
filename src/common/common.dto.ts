@@ -3,11 +3,14 @@ export class OptionDto {
   label: string;
 }
 
-export class TreeDto{
+/**
+ * 前端需要的树结构
+ */
+export class FrontTreeDto{
   // id
   value: string | number;
   // 名称
   label: string;
-  // 子部门
-  children?: TreeDto[]
+  // 子集
+  children?: FrontTreeDto[]
 }

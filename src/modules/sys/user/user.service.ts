@@ -11,6 +11,7 @@ import { DeptEntity } from '@/modules/sys/dept/dept.entity';
 import { UserDto } from '@/common/user.decorator';
 import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 import { MenuTreeNode } from '@/modules/sys/menu/menu.dto';
+import { MenuType } from '@/common/enums';
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<UserEntity> {
@@ -29,7 +30,9 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
    */
   async getMenuTree(id: number): Promise<MenuTreeNode[]> {
     const menus = await this.getMenusByUserId(id);
-    const tree = this.menuService.buildMenuTree(menus);
+    const allowTypes: MenuType[] = [MenuType.CATALOG, MenuType.MENU];
+    const menuList = menus.filter(f => allowTypes.includes(f.type));
+    const tree = this.menuService.buildMenuTree(menuList);
     return tree;
   }
 

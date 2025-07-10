@@ -18,7 +18,7 @@ export class DeptService {
    */
   async getFullTree() {
     const trees = await this.repo.findTrees();
-    return Utils.convertToTreeDto(trees);
+    return Utils.convertToFrontTreeDto(trees);
   }
 
   /**
@@ -28,7 +28,7 @@ export class DeptService {
   async getTree(id: number) {
     const dept = await this.repo.findOneByOrFail({ id });
     const tree = await this.repo.findDescendantsTree(dept);
-    return Utils.convertToTreeDto([tree]);
+    return Utils.convertToFrontTreeDto([tree]);
   }
 
   /**
