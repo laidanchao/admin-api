@@ -13,7 +13,7 @@ export class ClientEntity extends CompleteEntity {
   @Column({ nullable: true, length: 50 })
   password: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, type: 'varchar', enum: ClientType })
   clientType: ClientType;
 
   @Column({ nullable: true, length: 20 })
@@ -22,7 +22,7 @@ export class ClientEntity extends CompleteEntity {
   @Column({ nullable: true, length: 20 })
   qq: string;
 
-  @Column({ nullable: true, length: 50})
+  @Column({ nullable: true, length: 50 })
   email: string;
 
   @Column({ nullable: true, length: 255 })

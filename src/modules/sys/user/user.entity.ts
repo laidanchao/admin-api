@@ -35,7 +35,7 @@ export class UserEntity extends CompleteEntity {
   @Column({ nullable: true, length: 20 })
   phone: string;
 
-  @Column({ nullable: true, default: UserStatus.NORMAL, length: 20 })
+  @Column({ nullable: true, default: UserStatus.NORMAL, length: 20, enum: UserStatus, type: 'varchar' })
   status: UserStatus;
 
   @Column({ nullable: true })

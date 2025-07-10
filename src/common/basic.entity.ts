@@ -1,6 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Expose, Transform } from 'class-transformer';
-import * as dayjs from 'dayjs';
+import { Transform } from 'class-transformer';
+import dayjs from 'dayjs';
 
 export abstract class BasicEntity extends BaseEntity {
   @PrimaryGeneratedColumn()

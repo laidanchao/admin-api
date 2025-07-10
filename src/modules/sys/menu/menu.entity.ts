@@ -14,7 +14,7 @@ export class MenuEntity extends CompleteEntity {
   @Column({ nullable: true, length: 100, comment: '菜单路径' })
   path: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, type: 'varchar', enum: MenuType })
   type: MenuType;
 
   @Column({ nullable: true })

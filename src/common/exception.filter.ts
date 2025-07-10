@@ -3,9 +3,8 @@ import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 
 @Catch() // 捕获所有异常
-export class AllExceptionsFilter implements ExceptionFilter {
+export class AllExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
-    console.log(typeof exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -30,8 +29,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message =
         exception instanceof HttpException
           ? exception.getResponse()
-          : 'Internal server error';
+          : exception.message || 'Internal server error';
     }
+    console.error(exception);
 
     // 自定义响应格式
     response.status(status).json({
