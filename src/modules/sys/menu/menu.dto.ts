@@ -42,3 +42,45 @@ export class AddMenuDto {
   @IsOptional()
   sort: number;
 }
+
+export class CreateMenuDto {
+  @IsNumber()
+  parentId: number;
+
+  @IsString()
+  name: string;
+
+  @IsString()
+  path: string;
+
+  @IsEnum(MenuType)
+  type: MenuType;
+
+  @IsString()
+  @IsOptional()
+  icon: string;
+
+  @IsNumber()
+  @IsOptional()
+  sort: number;
+
+}
+
+export class UpdateMenuDto {
+  @IsNumber()
+  parentId: number;
+
+  @IsString()
+  name: string;
+
+  @IsString()
+  path: string;
+
+  @IsString()
+  @IsOptional()
+  icon: string;
+
+  @IsNumber()
+  @IsOptional()
+  sort: number;
+}

@@ -6,7 +6,7 @@ import { MenuType } from '@/common/enums';
 @Entity({ name: 'sys_menu' })
 export class MenuEntity extends CompleteEntity {
   @Column({ name: 'parent_id', nullable: true })
-  parentId: number;
+  parentId?: number;
 
   @Column({ length: 50 })
   name: string;
@@ -25,7 +25,7 @@ export class MenuEntity extends CompleteEntity {
 
   @ManyToOne(() => MenuEntity, menu => menu.children)
   @JoinColumn({ name: 'parent_id' })
-  parent: MenuEntity;
+  parent?: MenuEntity;
 
   @OneToMany(() => MenuEntity, menu => menu.parent)
   children: MenuEntity[];
