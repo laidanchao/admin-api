@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { DeptService } from '@/modules/sys/dept/dept.service';
 import { AddDeptDto, UpdateDeptDto } from '@/modules/sys/dept/dept.dto';
+import { User, UserDto } from '@/common/user.decorator';
 
 
 @Controller('api/sys/dept')
@@ -17,10 +18,18 @@ export class DeptController {
   }
 
   /**
+   * 查询部门列表
+   */
+  @Get('getDeptList')
+  async getDeptList() {
+    return await this.service.getDeptList();
+  }
+
+  /**
    * 查询指定起始节点的部门树
    */
   @Get('getTree/:id')
-  async getTree(@Param('id') id:number) {
+  async getTree(@Param('id') id: number) {
     return await this.service.getTree(id);
   }
 
@@ -28,7 +37,7 @@ export class DeptController {
    * 查询指定部门的所有子部门
    */
   @Get('getChildren/:id')
-  async getChildren(@Param('id') id:number) {
+  async getChildren(@Param('id') id: number) {
     return await this.service.getChildren(id);
   }
 
@@ -37,8 +46,8 @@ export class DeptController {
    * @param id
    */
   @Get(':id')
-  async findOne(@Param('id') id:number) {
-    return await this.service.repo.findOneBy({id});
+  async findOne(@Param('id') id: number) {
+    return await this.service.repo.findOneBy({ id });
   }
 
   /**
@@ -46,8 +55,8 @@ export class DeptController {
    * @param id
    */
   @Put(':id')
-  async updateOne(@Param('id') id:number, @Body() body: UpdateDeptDto ) {
-    return await this.service.updateOne(id,body);
+  async updateOne(@Param('id') id: number, @Body() body: UpdateDeptDto, @User() user: UserDto) {
+    return await this.service.updateOne(id, body, user);
   }
 
   /**
@@ -55,8 +64,8 @@ export class DeptController {
    * @param body
    */
   @Post()
-  async addOne(@Body() body: AddDeptDto) {
-    return await this.service.addOne(body);
+  async addOne(@Body() body: AddDeptDto, @User() user: UserDto) {
+    return await this.service.addOne(body, user);
   }
 
   /**
@@ -64,10 +73,17 @@ export class DeptController {
    * @param body
    */
   @Delete(':id')
-  async deleteOne(@Param('id') id:number) {
+  async deleteOne(@Param('id') id: number) {
     return await this.service.repo.delete(id);
   }
 
-
+  /**
+   * 删除部门
+   * @param ids
+   */
+  @Post('deleteByIds')
+  async deleteByIds(@Body() ids: number[]) {
+    return await this.service.deleteByIds(ids);
+  }
 
 }

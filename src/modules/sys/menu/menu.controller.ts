@@ -2,15 +2,15 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { MenuService } from '@/modules/sys/menu/menu.service';
 import { Crud } from '@dataui/crud';
 import { MenuEntity } from '@/modules/sys/menu/menu.entity';
-import { AddMenuDto, CreateMenuDto, UpdateMenuDto } from '@/modules/sys/menu/menu.dto';
+import { CreateMenuDto, UpdateMenuDto } from '@/modules/sys/menu/menu.dto';
 import { User, UserDto } from '@/common/user.decorator';
 
 @Crud({
   model: {
     type: MenuEntity,
   },
-  dto: {
-    create: AddMenuDto,
+  routes: {
+    only: ['getManyBase', 'getOneBase'],
   },
 })
 @Controller('api/sys/menu')
@@ -52,5 +52,14 @@ export class MenuController {
   @Post('updateMenu/:id')
   async updateMenu(@Param('id') id:number, @Body() body: UpdateMenuDto, @User() user:UserDto){
     return await this.service.updateMenu(id,body,user);
+  }
+
+  /**
+   * 删除菜单
+   * @param ids
+   */
+  @Post('deleteByIds')
+  async deleteByIds(@Body() ids: number[]) {
+    return await this.service.deleteByIds(ids);
   }
 }

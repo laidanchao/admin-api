@@ -18,31 +18,6 @@ export class MenuTreeNode {
   children: MenuTreeNode[];
 }
 
-export class AddMenuDto {
-  @IsNumber()
-  parentId: number;
-
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  path: string;
-
-  @IsEnum(MenuType)
-  @IsNotEmpty()
-  type: MenuType;
-
-  @IsString()
-  @IsOptional()
-  icon: string;
-
-  @IsNumber()
-  @IsOptional()
-  sort: number;
-}
-
 export class CreateMenuDto {
   @IsNumber()
   parentId: number;

@@ -20,6 +20,9 @@ import { MenuEntity } from '@/modules/sys/menu/menu.entity';
         eager: true,
       },
     },
+    filter: [
+      { field: 'userNo', operator: 'ne', value: '000' },
+    ],
   },
 })
 @Controller('/api/sys/user')

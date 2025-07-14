@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { RoleEntity } from '@/modules/sys/role/role.entity';
 import { BaseCrudService } from '@/common/base-crud.service';
 import { OptionDto } from '@/common/common.dto';
@@ -23,7 +23,9 @@ export class RoleService extends BaseCrudService<RoleEntity> {
    * 获取角色下拉数据源
    */
   async getOptions(): Promise<OptionDto[]> {
-    const roles = await this.repo.find();
+    const roles = await this.repo.findBy({
+      code:Not('ROOT')
+    });
     return roles.map(m => {
       return <OptionDto>{
         value: m.id,

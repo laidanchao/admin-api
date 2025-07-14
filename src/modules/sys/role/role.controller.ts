@@ -13,6 +13,11 @@ import { User, UserDto } from '@/common/user.decorator';
     update: UpdateRoleDto,
     create: CreateRoleDto,
   },
+  query: {
+    filter: [
+      { field: 'code', operator: 'ne', value: 'ROOT' },
+    ],
+  },
 })
 @Controller('api/sys/role')
 export class RoleController {

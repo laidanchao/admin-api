@@ -1,4 +1,4 @@
-import { Get, Injectable } from '@nestjs/common';
+import { BadRequestException, Get, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Like, Repository } from 'typeorm';
 import { MenuEntity } from '@/modules/sys/menu/menu.entity';
@@ -107,7 +107,7 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
     }
 
     const menu: DeepPartial<MenuEntity> = {
-      ...omit(body,'parentId'),
+      ...omit(body, 'parentId'),
       parent: parent,
       createBy: operator.username,
       updateBy: operator.username,
@@ -136,5 +136,20 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
     menu.updateBy = operator.username;
 
     return this.repo.save(menu);
+  }
+
+  async deleteByIds(ids: number[]) {
+    const menus = await this.repo.find({
+      where: {
+        id: In(ids),
+      },
+      relations: ['children'],
+    });
+
+    if (menus.some(s => s.children.length > 0)) {
+      throw new BadRequestException('该菜单下还有子菜单');
+    }
+
+    return await this.repo.delete(ids);
   }
 }

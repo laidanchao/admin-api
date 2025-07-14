@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TreeRepository } from 'typeorm';
+import { In, TreeRepository } from 'typeorm';
 import { DeptEntity } from '@/modules/sys/dept/dept.entity';
 import { AddDeptDto, UpdateDeptDto } from '@/modules/sys/dept/dept.dto';
 import Utils from '@/common/utils';
+import { UserDto } from '@/common/user.decorator';
 
 @Injectable()
 export class DeptService {
@@ -19,6 +20,10 @@ export class DeptService {
   async getFullTree() {
     const trees = await this.repo.findTrees();
     return Utils.convertToFrontTreeDto(trees);
+  }
+
+  async getDeptList() {
+    return this.repo.findTrees();
   }
 
   /**
@@ -42,42 +47,64 @@ export class DeptService {
 
   /**
    * 添加部门
-   * @param dto
+   * @param body
+   * @param operator
    */
-  async addOne(dto: AddDeptDto) {
-    const parentDept = await this.repo.findOneOrFail({
-      where: {
-        id: dto.parentId,
-      },
-      relations: ['children'],
-    });
+  async addOne(body: AddDeptDto, operator: UserDto) {
 
-    const dept = new DeptEntity();
-    dept.name = dto.name;
-    dept.createBy = 'ldc';
-    dept.updateBy = 'ldc';
-    dept.parent = parentDept;
-    return await this.repo.save(dept);
-  }
-
-  async updateOne(id: number, dto: UpdateDeptDto) {
-    let parentDept;
-    if (dto.parentId) {
-      parentDept = await this.repo.findOneOrFail({
+    let parent = null;
+    if (body.parentId > 0) {
+      parent = await this.repo.findOneOrFail({
         where: {
-          id: dto.parentId,
+          id: body.parentId,
         },
         relations: ['children'],
       });
     }
 
     const dept = new DeptEntity();
-    dept.name = dto.name;
-    dept.createBy = 'ldc';
-    dept.updateBy = 'ldc';
-    dept.parent = parentDept;
+    dept.name = body.name;
+    dept.createBy = operator.username;
+    dept.updateBy = operator.username;
+    dept.parent = parent;
+    return await this.repo.save(dept);
+  }
+
+  async updateOne(id: number, body: UpdateDeptDto, operator: UserDto) {
+    let parent = null;
+    if (body.parentId) {
+      parent = await this.repo.findOneOrFail({
+        where: {
+          id: body.parentId,
+        },
+        relations: ['children'],
+      });
+    }
+
+    const dept = new DeptEntity();
+    dept.name = body.name;
+    dept.updateBy = operator.username;
+    dept.parent = parent;
     return await this.repo.update(id, dept);
   }
 
 
+  async deleteByIds(ids: number[]) {
+    const depts = await this.repo.find({
+      where: {
+        id: In(ids),
+      },
+      relations: ['children', 'users'],
+    });
+
+    if (depts.some(s => s.children.length > 0)) {
+      throw new BadRequestException('该部门下还有子部门');
+    }
+
+    if (depts.some(s => s.users.length > 0)) {
+      throw new BadRequestException('该部门下还有员工');
+    }
+
+    return await this.repo.delete(ids);
+  }
 }
