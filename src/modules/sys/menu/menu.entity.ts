@@ -23,6 +23,9 @@ export class MenuEntity extends CompleteEntity {
   @Column({ type: 'int', default: 0, comment: '排序，越小越前面' })
   sort: number;
 
+  @Column({ nullable: true, comment: '按钮权限', length:100 })
+  permission: string;
+
   @ManyToOne(() => MenuEntity, menu => menu.children)
   @JoinColumn({ name: 'parent_id' })
   parent?: MenuEntity;

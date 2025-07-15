@@ -21,9 +21,7 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
   }
 
   async getFullTree() {
-    const menus = await this.repo.findBy({
-      type: In([MenuType.CATALOG, MenuType.MENU]),
-    });
+    const menus = await this.repo.find();
     const trees = this.buildMenuTree(menus);
     return Utils.convertToFrontTreeDto(trees);
   }
@@ -44,6 +42,7 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
         parentId: menu.parentId,
         name: menu.name,
         path: menu.path,
+        permission: menu.permission,
         type: menu.type,
         icon: menu.icon,
         sort: menu.sort,

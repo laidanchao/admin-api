@@ -54,6 +54,23 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     }
   }
 
+  async me(id: number) {
+    const user = await this.repo.findOneOrFail({
+      where: {
+        id,
+      },
+      relations: ['roles'],
+    });
+
+    const menus = await this.getMenusByUserId(id);
+
+    const buttons = menus.filter(f => f.type === MenuType.BUTTON);
+    return {
+      ...user,
+      permissions: buttons.map(m => m.permission),
+    };
+  }
+
   /**
    * 获取指定用户信息
    * @param id
@@ -165,4 +182,6 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
       updateBy: operator.username,
     });
   }
+
+
 }

@@ -54,7 +54,7 @@ export class DeptService {
 
     let parent = null;
     if (body.parentId > 0) {
-      parent = await this.repo.findOneOrFail({
+      parent = await this.repo.findOne({
         where: {
           id: body.parentId,
         },
@@ -73,7 +73,7 @@ export class DeptService {
   async updateOne(id: number, body: UpdateDeptDto, operator: UserDto) {
     let parent = null;
     if (body.parentId) {
-      parent = await this.repo.findOneOrFail({
+      parent = await this.repo.findOne({
         where: {
           id: body.parentId,
         },

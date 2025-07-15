@@ -9,6 +9,8 @@ export class MenuTreeNode {
   name: string;
   // 菜单路径
   path: string;
+  // 权限标识
+  permission: string;
   // 菜单类型
   type: MenuType;
   // 图标url
@@ -26,7 +28,12 @@ export class CreateMenuDto {
   name: string;
 
   @IsString()
+  @IsOptional()
   path: string;
+
+  @IsString()
+  @IsOptional()
+  permission: string;
 
   @IsEnum(MenuType)
   type: MenuType;
@@ -49,7 +56,12 @@ export class UpdateMenuDto {
   name: string;
 
   @IsString()
+  @IsOptional()
   path: string;
+
+  @IsString()
+  @IsOptional()
+  permission: string;
 
   @IsString()
   @IsOptional()

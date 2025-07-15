@@ -36,12 +36,7 @@ export class UserController {
    */
   @Get('me')
   async me(@User() user: UserDto) {
-    return await this.service.findOne({
-      where: {
-        id: user.userId,
-      },
-      relations: ['roles'],
-    });
+    return await this.service.me(user.userId);
   }
 
   /**

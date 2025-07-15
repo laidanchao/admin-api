@@ -29,7 +29,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       message =
         exception instanceof HttpException
           ? exception.getResponse()
-          : exception.message || 'Internal server error';
+          : (exception as Error).message || 'Internal server error';
     }
     console.error(exception);
 
