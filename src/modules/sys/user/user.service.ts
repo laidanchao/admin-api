@@ -12,6 +12,7 @@ import { UserDto } from '@/common/user.decorator';
 import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 import { MenuTreeNode } from '@/modules/sys/menu/menu.dto';
 import { MenuType } from '@/common/enums';
+import { aesEncrypt } from '@/common/crypt';
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<UserEntity> {
@@ -104,7 +105,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
 
     return await this.repo.save({
       username: body.username,
-      password: body.password,
+      password: aesEncrypt(body.password),
       userNo: body.userNo,
       nickname: body.nickname,
       gender: body.gender,
@@ -178,7 +179,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
    */
   async resetPassword(id: number, password: string, operator: UserDto) {
     return this.repo.update(id, {
-      password,
+      password: aesEncrypt(password),
       updateBy: operator.username,
     });
   }

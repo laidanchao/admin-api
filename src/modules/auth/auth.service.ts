@@ -5,6 +5,7 @@ import { UserEntity } from '@/modules/sys/user/user.entity';
 import { UserStatus } from '@/common/enums';
 import { JwtService } from '@nestjs/jwt';
 import {pick} from 'lodash';
+import { aesEncrypt } from '@/common/crypt'
 
 @Injectable()
 export class AuthService {
@@ -20,9 +21,17 @@ export class AuthService {
    * @param body
    */
   async login(username: string, password: string) {
-    const user = await this.userRepo.findOneBy({ username, password });
+    const user = await this.userRepo.findOne({
+      where:{
+        username
+      },
+      select:['id','username','password','status']
+    });
     if(!user){
-      throw new BadRequestException('用户或密码有误');
+      throw new BadRequestException('用户不存在');
+    }
+    if(aesEncrypt(password)!==user.password){
+      throw new BadRequestException('密码有误')
     }
 
     if(user.status !== UserStatus.NORMAL){
