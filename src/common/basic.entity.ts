@@ -17,8 +17,8 @@ export abstract class BasicEntity extends BaseEntity {
 
 export abstract class CompleteEntity extends BasicEntity {
   @Column()
-  createBy: string;
+  createdBy: string;
 
-  @Column()
-  updateBy: string;
+  @Column({ nullable: true })
+  updatedBy: string;
 }

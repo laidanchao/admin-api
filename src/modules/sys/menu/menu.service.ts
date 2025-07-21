@@ -108,8 +108,7 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
     const menu: DeepPartial<MenuEntity> = {
       ...omit(body, 'parentId'),
       parent: parent,
-      createBy: operator.username,
-      updateBy: operator.username,
+      createdBy: operator.username,
     };
 
     return this.repo.save(menu);
@@ -132,7 +131,7 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
     menu.icon = body.icon;
     menu.sort = body.sort;
     menu.parent = parent;
-    menu.updateBy = operator.username;
+    menu.updatedBy = operator.username;
 
     return this.repo.save(menu);
   }

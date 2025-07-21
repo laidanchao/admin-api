@@ -64,8 +64,7 @@ export class DeptService {
 
     const dept = new DeptEntity();
     dept.name = body.name;
-    dept.createBy = operator.username;
-    dept.updateBy = operator.username;
+    dept.updatedBy = operator.username;
     dept.parent = parent;
     return await this.repo.save(dept);
   }
@@ -83,7 +82,7 @@ export class DeptService {
 
     const dept = new DeptEntity();
     dept.name = body.name;
-    dept.updateBy = operator.username;
+    dept.updatedBy = operator.username;
     dept.parent = parent;
     return await this.repo.update(id, dept);
   }

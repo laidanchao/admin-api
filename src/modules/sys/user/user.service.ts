@@ -116,8 +116,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
       status: body.status,
       dept,
       roles,
-      createBy: operator.username,
-      updateBy: operator.username,
+      createdBy: operator.username
     });
   }
 
@@ -149,7 +148,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     user.status = body.status;
     user.dept = dept;
     user.roles = roles;
-    user.updateBy = operator.username;
+    user.updatedBy = operator.username;
 
     return await this.repo.save(user);
   }
@@ -180,7 +179,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
   async resetPassword(id: number, password: string, operator: UserDto) {
     return this.repo.update(id, {
       password: aesEncrypt(password),
-      updateBy: operator.username,
+      updatedBy: operator.username,
     });
   }
 
