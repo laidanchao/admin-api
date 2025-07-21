@@ -9,7 +9,7 @@ export class DictEntity extends CompleteEntity {
   @Column({ unique: true, comment: '字典编码', length: 50 })
   code: string;
 
-  @Column({ comment: '字典类型', length: 50 })
+  @Column({ comment: '字典类型', length: 50, nullable: true })
   type: string;
 
   @Column({ nullable: true, comment: '字典描述', length: 255 })

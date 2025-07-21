@@ -8,7 +8,7 @@ import { DictEntity } from '@/modules/sys/dict/dict.entity';
     type: DictEntity,
   },
 })
-@Controller('api/sys/role')
+@Controller('api/sys/dict')
 export class DictController {
   constructor(private readonly service: DictService) {
   }
