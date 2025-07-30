@@ -6,6 +6,7 @@ import { SystemModule } from '@/modules/sys/system.module';
 import { CrmModule } from '@/modules/crm/crm.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { ClsModule } from 'nestjs-cls';
+import { FileModule } from '@/modules/file/file.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ClsModule } from 'nestjs-cls';
     AuthModule,
     SystemModule,
     CrmModule,
+    FileModule
   ],
 })
 export class AppModule {

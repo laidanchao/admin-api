@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource, In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '@/modules/sys/user/user.entity';
@@ -13,6 +13,7 @@ import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 import { MenuTreeNode } from '@/modules/sys/menu/menu.dto';
 import { MenuType } from '@/common/enums';
 import { aesEncrypt } from '@/common/crypt';
+import { FileService } from '@/modules/file/file.service';
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<UserEntity> {
@@ -21,6 +22,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     public readonly repo: Repository<UserEntity>,
     private datasource: DataSource,
     private readonly menuService: MenuService,
+    private readonly fileService: FileService
   ) {
     super(repo);
   }
@@ -60,7 +62,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
       where: {
         id,
       },
-      relations: ['roles'],
+      relations: ['dept', 'roles'],
     });
 
     const menus = await this.getMenusByUserId(id);
@@ -116,7 +118,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
       status: body.status,
       dept,
       roles,
-      createdBy: operator.username
+      createdBy: operator.username,
     });
   }
 
@@ -183,5 +185,41 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     });
   }
 
+  /**
+   * 修改用户密码
+   * @param id
+   * @param oldPassword
+   * @param newPassword
+   * @param confirmPassword
+   */
+  async changePassword(id: number, { oldPassword, newPassword, confirmPassword }) {
+    if (newPassword !== confirmPassword) {
+      throw new BadRequestException('两次输入密码不一致');
+    }
+    const user = await this.repo.findOneOrFail({
+      where: {
+        id,
+      },
+      select: ['password'],
+    });
 
+    if (user.password !== aesEncrypt(oldPassword)) {
+      throw new BadRequestException('旧密码有误');
+    }
+
+    return this.repo.update(id, {
+      password: aesEncrypt(newPassword),
+      updatedBy: user.username,
+    });
+  }
+
+  async updateAvatar(id: number, avatar: string) {
+    const user = await this.repo.findOneByOrFail({ id });
+    const key = user.avatar.split('?')[0].replace(process.env.QINIU_DOMAIN+'/','');
+
+    await this.repo.update(id,{
+      avatar
+    });
+    await this.fileService.deleteFile(key);
+  }
 }

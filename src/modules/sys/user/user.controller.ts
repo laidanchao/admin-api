@@ -115,4 +115,24 @@ export class UserController {
     return await this.service.repo.delete(ids);
   }
 
+  /**
+   * 修改用户密码
+   * @param body
+   * @param user
+   */
+  @Post('changePassword')
+  async changePassword(@Body() body: { oldPassword: string, newPassword: string, confirmPassword: string }, @User() user: UserDto) {
+    return await this.service.changePassword(user.userId, body);
+  }
+
+
+  /**
+   * 修改头像
+   * @param body
+   * @param user
+   */
+  @Post('updateAvatar')
+  async updateAvatar(@Body() body: { avatar: string }, @User() user: UserDto) {
+    return await this.service.updateAvatar(user.userId, body.avatar);
+  }
 }
