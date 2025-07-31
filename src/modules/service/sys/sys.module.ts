@@ -7,6 +7,7 @@ import { DictModule } from '@/modules/service/sys/dict/dict.module';
 
 @Module({
   imports: [UserModule, RoleModule, MenuModule, DeptModule, DictModule],
+  exports: [UserModule, RoleModule, MenuModule, DeptModule, DictModule],
 })
 export class SysModule {
 }

@@ -6,5 +6,5 @@ import { AuthController } from '@/modules/api/auth/auth.controller';
   imports: [AuthModule],
   controllers: [AuthController],
 })
-export class AuthApiModuleModule {
+export class AuthApiModule {
 }

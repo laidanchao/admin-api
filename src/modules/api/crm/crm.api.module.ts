@@ -6,5 +6,5 @@ import { CrmModule } from '@/modules/service/crm/crm.module';
   imports: [CrmModule],
   controllers: [ClientController],
 })
-export class CrmApiModuleModule {
+export class CrmApiModule {
 }

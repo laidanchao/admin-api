@@ -6,5 +6,5 @@ import { FileModule } from '@/modules/service/file/file.module';
   imports: [FileModule],
   controllers: [FileController],
 })
-export class FileApiModuleModule {
+export class FileApiModule {
 }

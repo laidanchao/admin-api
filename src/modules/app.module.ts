@@ -7,6 +7,7 @@ import { CrmModule } from '@/modules/service/crm/crm.module';
 import { AuthModule } from '@/modules/service/auth/auth.module';
 import { ClsModule } from 'nestjs-cls';
 import { FileModule } from '@/modules/service/file/file.module';
+import { ApiModule } from '@/modules/api/api.module';
 
 @Module({
   imports: [
@@ -17,12 +18,13 @@ import { FileModule } from '@/modules/service/file/file.module';
     }),
     ClsModule.forRoot({
       global: true,
-      middleware: { mount: true } // 启用中间件
+      middleware: { mount: true }, // 启用中间件
     }),
+    ApiModule,
     AuthModule,
     SysModule,
     CrmModule,
-    FileModule
+    FileModule,
   ],
 })
 export class AppModule {

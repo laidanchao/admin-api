@@ -22,6 +22,7 @@ import Utils from '@/common/utils';
       useClass: JwtAuthGuard,
     },
   ],
+  exports: [AuthService],
 })
 export class AuthModule {
 }
