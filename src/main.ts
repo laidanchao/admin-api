@@ -13,6 +13,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe()); // 启用装饰器校验
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  app.setGlobalPrefix('api');
   await app.listen(process.env.PORT || 3000);
   logger.log(`Running on ${await app.getUrl()}`);
 }
