@@ -19,3 +19,12 @@ export enum Gender {
   'MALE' = 'MALE',
   'FEMALE' = 'FEMALE'
 }
+
+export enum DictItemTagType {
+  'info' = 'info',
+  'primary' = 'primary',
+  'warning' = 'warning',
+  'danger' = 'danger',
+  'success' = 'success',
+  ''=''
+}

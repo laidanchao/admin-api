@@ -6,6 +6,9 @@ import { Crud } from '@dataui/crud';
 @Crud({
   model:{
     type: ClientEntity
+  },
+  query: {
+    sort: [{ field: "id", order: "DESC" }]
   }
 })
 @Controller('crm/client')

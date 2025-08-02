@@ -12,6 +12,9 @@ import { User, UserDto } from '@/common/user.decorator';
   routes: {
     only: ['getManyBase', 'getOneBase'],
   },
+  query: {
+    sort: [{ field: "id", order: "DESC" }]
+  }
 })
 @Controller('sys/menu')
 export class MenuController {
