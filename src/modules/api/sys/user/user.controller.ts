@@ -15,6 +15,9 @@ import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
     only: ['getManyBase', 'getOneBase'],
   },
   query: {
+    query: {
+      sort: [{ field: 'id', order: 'DESC' }],
+    },
     join: {
       dept: {
         eager: true,
