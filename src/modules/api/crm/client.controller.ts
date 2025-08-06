@@ -4,14 +4,20 @@ import { ClientEntity } from '@/modules/service/crm/client/client.entity';
 import { Crud } from '@dataui/crud';
 
 @Crud({
-  model:{
-    type: ClientEntity
+  model: {
+    type: ClientEntity,
   },
   query: {
-    sort: [{ field: "id", order: "DESC" }]
-  }
+    join: {
+      saler: {
+        eager: true,
+      },
+    },
+    sort: [{ field: 'id', order: 'DESC' }],
+  },
 })
 @Controller('crm/client')
 export class ClientController {
-  constructor(private readonly service: ClientService) {}
+  constructor(private readonly service: ClientService) {
+  }
 }

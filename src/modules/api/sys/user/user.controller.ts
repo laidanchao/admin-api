@@ -21,7 +21,7 @@ import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
     join: {
       dept: {
         eager: true,
-      },
+      }
     },
     filter: [
       { field: 'userNo', operator: 'ne', value: '000' },
@@ -137,5 +137,14 @@ export class UserController {
   @Post('updateAvatar')
   async updateAvatar(@Body() body: { avatar: string }, @User() user: UserDto) {
     return await this.service.updateAvatar(user.userId, body.avatar);
+  }
+
+
+  /**
+   * 获取销售员
+   */
+  @Get('getSalers')
+  async getSalers() {
+    return await this.service.getSalers();
   }
 }

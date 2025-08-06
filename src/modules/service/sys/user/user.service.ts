@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { DataSource, In, Repository } from 'typeorm';
+import { DataSource, In, Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '@/modules/service/sys/user/user.entity';
-import { chain, padStart } from 'lodash';
+import { chain, flatMap, padStart } from 'lodash';
 import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
 import { MenuService } from '@/modules/service/sys/menu/menu.service';
 import { CreateUserDto, UpdateUserDto } from '@/modules/service/sys/user/user.dto';
@@ -22,7 +22,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     public readonly repo: Repository<UserEntity>,
     private datasource: DataSource,
     private readonly menuService: MenuService,
-    private readonly fileService: FileService
+    private readonly fileService: FileService,
   ) {
     super(repo);
   }
@@ -215,11 +215,33 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
 
   async updateAvatar(id: number, avatar: string) {
     const user = await this.repo.findOneByOrFail({ id });
-    const key = user.avatar.split('?')[0].replace(process.env.QINIU_DOMAIN+'/','');
 
-    await this.repo.update(id,{
-      avatar
+    await this.repo.update(id, {
+      avatar,
     });
-    await this.fileService.deleteFile(key);
+
+    // 删除旧头像
+    if(user.avatar){
+      const key = user.avatar.split('?')[0].replace(process.env.QINIU_DOMAIN + '/', '');
+      await this.fileService.deleteFile(key);
+    }
+  }
+
+  async getSalers() {
+    const roles = await this.datasource.getRepository(RoleEntity).find({
+        where: {
+          code: Like(`SALE%`),
+        },
+        relations: ['users'],
+      },
+    );
+
+    return flatMap(roles, 'users').map(m => {
+      return {
+        id: m.id,
+        username: m.username,
+        nickname: m.nickname
+      };
+    });
   }
 }
