@@ -1,7 +1,9 @@
 import { CompleteEntity } from '@/common/basic.entity';
-import { Column, Entity, JoinColumn, OneToOne, Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, Relation } from 'typeorm';
 import { ClientType } from '@/common/enums';
 import { UserEntity } from '@/modules/service/sys/user/user.entity';
+import { OrderEntity } from '@/modules/service/oms/order/order.entity';
+import { DeptEntity } from '@/modules/service/sys/dept/dept.entity';
 
 @Entity({ name: 'crm_client' })
 export class ClientEntity extends CompleteEntity {
@@ -32,7 +34,10 @@ export class ClientEntity extends CompleteEntity {
   @Column({ nullable: true })
   salerId: number;
 
-  @OneToOne(() => UserEntity)
-  @JoinColumn({ name: 'saler_id', referencedColumnName: 'id' })
+  @ManyToOne(() => UserEntity, user => user.clients)
+  @JoinColumn({ name: 'saler_id' })
   saler: Relation<UserEntity>;
+
+  @OneToMany(() => OrderEntity, order => order.client)
+  orders: Relation<OrderEntity[]>;
 }

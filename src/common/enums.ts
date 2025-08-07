@@ -26,5 +26,20 @@ export enum DictItemTagType {
   'warning' = 'warning',
   'danger' = 'danger',
   'success' = 'success',
-  ''=''
+  '' = ''
+}
+
+export enum OrderType {
+  'SC' = 'SC',
+  'PC' = 'PC'
+}
+
+export enum OrderStatus {
+  'CREATED' = 'CREATED'
+}
+
+export enum OrderPayStatus {
+  'NOT_PAID' = 'NOT_PAID',
+  'PART_PAID' = 'PART_PAID',
+  'PAID' = 'PAID',
 }

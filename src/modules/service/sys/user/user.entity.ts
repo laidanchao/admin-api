@@ -1,9 +1,11 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, Relation } from 'typeorm';
 import { CompleteEntity } from '@/common/basic.entity';
 import { RoleEntity } from '@/modules/service/sys/role/role.entity';
 import { DeptEntity } from '@/modules/service/sys/dept/dept.entity';
 import { UserStatus } from '@/common/enums';
+import { OrderEntity } from '@/modules/service/oms/order/order.entity';
+import { ClientEntity } from '@/modules/service/crm/client/client.entity';
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends CompleteEntity {
@@ -53,4 +55,9 @@ export class UserEntity extends CompleteEntity {
   @JoinColumn({ name: 'dept_id' })
   dept: Relation<DeptEntity>;
 
+  @OneToMany(() => ClientEntity, client => client.saler)
+  clients: Relation<ClientEntity[]>;
+
+  @OneToMany(() => OrderEntity, order => order.saler)
+  orders: Relation<OrderEntity[]>;
 }
