@@ -38,4 +38,12 @@ export class FileService {
     return await new Qiniu().deleteFile(key);
   }
 
+  /**
+   * 下载文件
+   * @param key
+   */
+  async getDownloadUrl(key: string) {
+    return await new Qiniu().getDownloadUrl(key);
+  }
+
 }

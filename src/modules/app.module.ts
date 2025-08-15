@@ -8,6 +8,7 @@ import { AuthModule } from '@/modules/service/auth/auth.module';
 import { ClsModule } from 'nestjs-cls';
 import { FileModule } from '@/modules/service/file/file.module';
 import { ApiModule } from '@/modules/api/api.module';
+import { OmsModule } from '@/modules/service/oms/oms.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ApiModule } from '@/modules/api/api.module';
     SysModule,
     CrmModule,
     FileModule,
+    OmsModule,
   ],
 })
 export class AppModule {

@@ -76,4 +76,14 @@ export class Qiniu {
       );
     });
   }
+
+  /**
+   * 获取文件下载地址
+   * @param key
+   */
+  getDownloadUrl(key:string){
+    const bucketManager = new qiniu.rs.BucketManager(this.Mac);
+    const deadline = dayjs().add(1, 'hour').unix();
+    return bucketManager.privateDownloadUrl(process.env.QINIU_DOMAIN, key, deadline);
+  }
 }

@@ -5,12 +5,14 @@ export const User = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
     return {
       userId: request.user?.id || 0,
-      username: request.user?.username || ''
+      username: request.user?.username || '',
+      roles: request.user?.roles || [],
     };
-  }
+  },
 );
 
 export class UserDto {
-  userId:number;
-  username:string;
+  userId: number;
+  username: string;
+  roles: string[];
 }
