@@ -21,7 +21,7 @@ export class ClientEntity extends CompleteEntity {
   @Column({ length: 20, type: 'varchar', enum: ClientStage })
   clientStage: ClientStage;
 
-  @Column({ nullable: true, length: 20 })
+  @Column({ unique: true, nullable: true, length: 20 })
   phone: string;
 
   @Column({ nullable: true, length: 20 })

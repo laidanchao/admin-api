@@ -20,9 +20,24 @@ export enum ClientStage {
   'COOPERATING' = 'COOPERATING'// 合作中的客户
 }
 
+/**
+ * 客户分级描述
+ */
+export enum ClientStageDesc {
+  '未开发' = 'DEFAULT',
+  '无意向' = 'NOT_INTERESTED',
+  '有意向' = 'INTERESTING',
+  '合作中' = 'COOPERATING'
+}
+
 export enum ClientType {
   'PERSONAL' = 'PERSONAL',
   'COMPANY' = 'COMPANY'
+}
+
+export enum ClientTypeDesc {
+  '个人' = 'PERSONAL',
+  '企业' = 'COMPANY'
 }
 
 export enum Gender {

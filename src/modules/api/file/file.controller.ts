@@ -1,4 +1,13 @@
-import { Body, Controller, NestInterceptor, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NestInterceptor,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from '@/modules/service/file/file.service';
 
@@ -16,7 +25,7 @@ export class FileController {
   @UseInterceptors(FileInterceptor('file', {
     fileFilter: (req, file, callback) => {
       if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-        return callback(new Error('只允许上传图片文件'), false);
+        return callback(new BadRequestException('只允许上传图片文件'), false);
       }
       callback(null, true);
     },
@@ -26,6 +35,14 @@ export class FileController {
   }) as NestInterceptor)
   async uploadImage(@UploadedFile() file: Express.Multer.File, @Body() body: { filePath: string }) {
     return this.fileService.uploadImage(file, body.filePath);
+  }
+
+  /**
+   * 获取导入客户的模板
+   */
+  @Get('getClientTemplate')
+  async getClientTemplate() {
+    return this.fileService.getDownloadUrl('template/客户导入模板.xlsx');
   }
 
 }
