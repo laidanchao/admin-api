@@ -28,15 +28,15 @@ export class ClientService extends BaseCrudService<ClientEntity> {
 
     for (let i = 0; i < jsonData.length; i++) {
       const item = jsonData[i];
-      let errorMessage='';
+      let errorMessage = '';
       if (!item['客户名']) {
-        errorMessage+='客户名不可为空;';
+        errorMessage += '客户名不可为空;';
       }
       if (!item['客户类型']) {
-        errorMessage+='客户类型不可为空;';
+        errorMessage += '客户类型不可为空;';
       }
       if (!item['客户分级']) {
-        errorMessage+='客户分级不可为空;';
+        errorMessage += '客户分级不可为空;';
       }
       if (errorMessage) {
         errorMessageArray.push(`第${i + 1}行,${errorMessage}`);
@@ -63,6 +63,5 @@ export class ClientService extends BaseCrudService<ClientEntity> {
       errorCount: errorMessageArray.length,
       errorMessageArray: errorMessageArray,
     };
-
   }
 }

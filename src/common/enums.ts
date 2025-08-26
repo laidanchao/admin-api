@@ -1,6 +1,6 @@
 export enum UserStatus {
   'NORMAL' = 'NORMAL',
-  'FROZEN' = 'FROZEN'
+  'FROZEN' = 'FROZEN',
 }
 
 export enum MenuType {
@@ -14,10 +14,10 @@ export enum MenuType {
  * 客户分级
  */
 export enum ClientStage {
-  'DEFAULT' = 'DEFAULT',// 未开发的客户
-  'NOT_INTERESTED' = 'NOT_INTERESTED',// 没有意向的客户
-  'INTERESTING' = 'INTERESTING',// 有意向的客户
-  'COOPERATING' = 'COOPERATING'// 合作中的客户
+  'DEFAULT' = 'DEFAULT', // 未开发的客户
+  'NOT_INTERESTED' = 'NOT_INTERESTED', // 没有意向的客户
+  'INTERESTING' = 'INTERESTING', // 有意向的客户
+  'COOPERATING' = 'COOPERATING', // 合作中的客户
 }
 
 /**
@@ -27,22 +27,22 @@ export enum ClientStageDesc {
   '未开发' = 'DEFAULT',
   '无意向' = 'NOT_INTERESTED',
   '有意向' = 'INTERESTING',
-  '合作中' = 'COOPERATING'
+  '合作中' = 'COOPERATING',
 }
 
 export enum ClientType {
   'PERSONAL' = 'PERSONAL',
-  'COMPANY' = 'COMPANY'
+  'COMPANY' = 'COMPANY',
 }
 
 export enum ClientTypeDesc {
   '个人' = 'PERSONAL',
-  '企业' = 'COMPANY'
+  '企业' = 'COMPANY',
 }
 
 export enum Gender {
   'MALE' = 'MALE',
-  'FEMALE' = 'FEMALE'
+  'FEMALE' = 'FEMALE',
 }
 
 export enum DictItemTagType {
@@ -51,16 +51,16 @@ export enum DictItemTagType {
   'warning' = 'warning',
   'danger' = 'danger',
   'success' = 'success',
-  '' = ''
+  '' = '',
 }
 
 export enum OrderType {
   'SC' = 'SC',
-  'PC' = 'PC'
+  'PC' = 'PC',
 }
 
 export enum OrderStatus {
-  'CREATED' = 'CREATED'
+  'CREATED' = 'CREATED',
 }
 
 export enum OrderPayStatus {

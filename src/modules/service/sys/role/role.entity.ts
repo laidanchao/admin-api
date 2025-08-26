@@ -14,10 +14,10 @@ export class RoleEntity extends CompleteEntity {
   @Column({ nullable: true, comment: '角色描述' })
   description: string;
 
-  @ManyToMany(() => UserEntity, user => user.roles)
+  @ManyToMany(() => UserEntity, (user) => user.roles)
   users: Relation<UserEntity[]>;
 
-  @ManyToMany(() => MenuEntity, menu => menu.roles)
+  @ManyToMany(() => MenuEntity, (menu) => menu.roles)
   @JoinTable({
     name: 'sys_role_menus',
     joinColumn: { name: 'role_id', referencedColumnName: 'id' },

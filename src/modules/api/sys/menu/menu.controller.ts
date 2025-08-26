@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { MenuService } from '@/modules/service/sys/menu/menu.service';
 import { Crud } from '@dataui/crud';
 import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
-import { CreateMenuDto, UpdateMenuDto } from '@/modules/service/sys/menu/menu.dto';
+import {
+  CreateMenuDto,
+  UpdateMenuDto,
+} from '@/modules/service/sys/menu/menu.dto';
 import { User, UserDto } from '@/common/user.decorator';
 
 @Crud({
@@ -13,13 +16,12 @@ import { User, UserDto } from '@/common/user.decorator';
     only: ['getManyBase', 'getOneBase'],
   },
   query: {
-    sort: [{ field: "id", order: "DESC" }]
-  }
+    sort: [{ field: 'id', order: 'DESC' }],
+  },
 })
 @Controller('sys/menu')
 export class MenuController {
-  constructor(private readonly service: MenuService) {
-  }
+  constructor(private readonly service: MenuService) {}
 
   /**
    * 查询完整菜单树
@@ -38,7 +40,6 @@ export class MenuController {
     return await this.service.getMenuList(query.keywords);
   }
 
-
   /**
    * 获取菜单下拉数据源
    */
@@ -48,13 +49,17 @@ export class MenuController {
   }
 
   @Post('createMenu')
-  async createMenu(@Body() body: CreateMenuDto, @User() user:UserDto){
-    return await this.service.createMenu(body,user);
+  async createMenu(@Body() body: CreateMenuDto, @User() user: UserDto) {
+    return await this.service.createMenu(body, user);
   }
 
   @Post('updateMenu/:id')
-  async updateMenu(@Param('id') id:number, @Body() body: UpdateMenuDto, @User() user:UserDto){
-    return await this.service.updateMenu(id,body,user);
+  async updateMenu(
+    @Param('id') id: number,
+    @Body() body: UpdateMenuDto,
+    @User() user: UserDto,
+  ) {
+    return await this.service.updateMenu(id, body, user);
   }
 
   /**

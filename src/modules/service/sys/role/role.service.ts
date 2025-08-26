@@ -5,7 +5,6 @@ import { RoleEntity } from '@/modules/service/sys/role/role.entity';
 import { BaseCrudService } from '@/common/base-crud.service';
 import { OptionDto } from '@/common/common.dto';
 import { MenuType } from '@/common/enums';
-import { UserDto } from '@/common/user.decorator';
 import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
 
 @Injectable()
@@ -24,9 +23,9 @@ export class RoleService extends BaseCrudService<RoleEntity> {
    */
   async getOptions(): Promise<OptionDto[]> {
     const roles = await this.repo.findBy({
-      code:Not('ROOT')
+      code: Not('ROOT'),
     });
-    return roles.map(m => {
+    return roles.map((m) => {
       return <OptionDto>{
         value: m.id,
         label: m.name,
@@ -47,7 +46,9 @@ export class RoleService extends BaseCrudService<RoleEntity> {
     });
 
     const allowedTypes: MenuType[] = [MenuType.CATALOG, MenuType.MENU];
-    return role.menus.filter(f => allowedTypes.includes(f.type)).map(m => m.id);
+    return role.menus
+      .filter((f) => allowedTypes.includes(f.type))
+      .map((m) => m.id);
   }
 
   /**
@@ -56,7 +57,7 @@ export class RoleService extends BaseCrudService<RoleEntity> {
    * @param menuIds
    * @param user
    */
-  async updateRoleMenus(id: number, menuIds: number[], user: UserDto) {
+  async updateRoleMenus(id: number, menuIds: number[]) {
     const role = await this.repo.findOneByOrFail({ id });
     const menus = await this.menuRepo.findBy({
       id: In(menuIds),

@@ -5,7 +5,10 @@ import { UserEntity } from '@/modules/service/sys/user/user.entity';
 import { chain, flatMap, padStart } from 'lodash';
 import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
 import { MenuService } from '@/modules/service/sys/menu/menu.service';
-import { CreateUserDto, UpdateUserDto } from '@/modules/service/sys/user/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+} from '@/modules/service/sys/user/user.dto';
 import { RoleEntity } from '@/modules/service/sys/role/role.entity';
 import { DeptEntity } from '@/modules/service/sys/dept/dept.entity';
 import { UserDto } from '@/common/user.decorator';
@@ -34,7 +37,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
   async getMenuTree(id: number): Promise<MenuTreeNode[]> {
     const menus = await this.getMenusByUserId(id);
     const allowTypes: MenuType[] = [MenuType.CATALOG, MenuType.MENU];
-    const menuList = menus.filter(f => allowTypes.includes(f.type));
+    const menuList = menus.filter((f) => allowTypes.includes(f.type));
     const tree = this.menuService.buildMenuTree(menuList);
     return tree;
   }
@@ -67,10 +70,10 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
 
     const menus = await this.getMenusByUserId(id);
 
-    const buttons = menus.filter(f => f.type === MenuType.BUTTON);
+    const buttons = menus.filter((f) => f.type === MenuType.BUTTON);
     return {
       ...user,
-      permissions: buttons.map(m => m.permission),
+      permissions: buttons.map((m) => m.permission),
     };
   }
 
@@ -88,7 +91,7 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
 
     return {
       ...user,
-      roleIds: user.roles.map(m => m.id),
+      roleIds: user.roles.map((m) => m.id),
     };
   }
 
@@ -101,9 +104,11 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
       id: In(body.roleIds),
     });
 
-    const dept = await this.datasource.getRepository(DeptEntity).findOneByOrFail({
-      id: body.deptId,
-    });
+    const dept = await this.datasource
+      .getRepository(DeptEntity)
+      .findOneByOrFail({
+        id: body.deptId,
+      });
 
     return await this.repo.save({
       username: body.username,
@@ -129,16 +134,17 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
    * @param operator
    */
   async updateUser(id: number, body: UpdateUserDto, operator: UserDto) {
-
     const user = await this.repo.findOneByOrFail({ id });
 
     const roles = await this.datasource.getRepository(RoleEntity).findBy({
       id: In(body.roleIds),
     });
 
-    const dept = await this.datasource.getRepository(DeptEntity).findOneByOrFail({
-      id: body.deptId,
-    });
+    const dept = await this.datasource
+      .getRepository(DeptEntity)
+      .findOneByOrFail({
+        id: body.deptId,
+      });
 
     user.password = body.password;
     user.nickname = body.nickname;
@@ -159,7 +165,6 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
    * 获取工号
    */
   async getUserNo() {
-
     const [user] = await this.repo.find({
       order: {
         userNo: 'DESC',
@@ -192,7 +197,10 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
    * @param newPassword
    * @param confirmPassword
    */
-  async changePassword(id: number, { oldPassword, newPassword, confirmPassword }) {
+  async changePassword(
+    id: number,
+    { oldPassword, newPassword, confirmPassword },
+  ) {
     if (newPassword !== confirmPassword) {
       throw new BadRequestException('两次输入密码不一致');
     }
@@ -221,26 +229,27 @@ export class UserService extends TypeOrmCrudService<UserEntity> {
     });
 
     // 删除旧头像
-    if(user.avatar){
-      const key = user.avatar.split('?')[0].replace(process.env.QINIU_DOMAIN + '/', '');
+    if (user.avatar) {
+      const key = user.avatar
+        .split('?')[0]
+        .replace(process.env.QINIU_DOMAIN + '/', '');
       await this.fileService.deleteFile(key);
     }
   }
 
   async getSalers() {
     const roles = await this.datasource.getRepository(RoleEntity).find({
-        where: {
-          code: Like(`SALE%`),
-        },
-        relations: ['users'],
+      where: {
+        code: Like(`SALE%`),
       },
-    );
+      relations: ['users'],
+    });
 
-    return flatMap(roles, 'users').map(m => {
+    return flatMap(roles, 'users').map((m) => {
       return {
         id: m.id,
         username: m.username,
-        nickname: m.nickname
+        nickname: m.nickname,
       };
     });
   }

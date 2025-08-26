@@ -5,5 +5,4 @@ import { OrderModule } from './order/order.module';
   imports: [OrderModule],
   exports: [OrderModule],
 })
-export class OmsModule {
-}
+export class OmsModule {}

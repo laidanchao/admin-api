@@ -24,5 +24,4 @@ import Utils from '@/common/utils';
   ],
   exports: [AuthService],
 })
-export class AuthModule {
-}
+export class AuthModule {}

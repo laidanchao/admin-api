@@ -5,5 +5,4 @@ import { ClientModule } from '@/modules/service/crm/client/client.module';
   imports: [ClientModule],
   exports: [ClientModule],
 })
-export class CrmModule {
-}
+export class CrmModule {}

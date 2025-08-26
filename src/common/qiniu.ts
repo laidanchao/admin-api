@@ -6,7 +6,10 @@ export class Qiniu {
   private readonly Bucket = process.env.QINIU_BUCKET;
 
   constructor() {
-    this.Mac = new qiniu.auth.digest.Mac(process.env.QINIU_ACCESS_KEY, process.env.QINIU_SECRET_KEY);
+    this.Mac = new qiniu.auth.digest.Mac(
+      process.env.QINIU_ACCESS_KEY,
+      process.env.QINIU_SECRET_KEY,
+    );
   }
 
   getToken() {
@@ -50,7 +53,11 @@ export class Qiniu {
     const bucketManager = new qiniu.rs.BucketManager(this.Mac);
     // 过期时间（单位：秒），这里设置为50年，相当于永久
     const deadline = dayjs().add(50, 'year').unix();
-    return bucketManager.privateDownloadUrl(process.env.QINIU_DOMAIN, key, deadline);
+    return bucketManager.privateDownloadUrl(
+      process.env.QINIU_DOMAIN,
+      key,
+      deadline,
+    );
   }
 
   /**
@@ -81,9 +88,13 @@ export class Qiniu {
    * 获取文件下载地址
    * @param key
    */
-  getDownloadUrl(key:string){
+  getDownloadUrl(key: string) {
     const bucketManager = new qiniu.rs.BucketManager(this.Mac);
     const deadline = dayjs().add(1, 'hour').unix();
-    return bucketManager.privateDownloadUrl(process.env.QINIU_DOMAIN, key, deadline);
+    return bucketManager.privateDownloadUrl(
+      process.env.QINIU_DOMAIN,
+      key,
+      deadline,
+    );
   }
 }

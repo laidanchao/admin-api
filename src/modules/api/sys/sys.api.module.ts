@@ -18,5 +18,4 @@ import { DictItemController } from '@/modules/api/sys/dict/dict-item.controller'
     UserController,
   ],
 })
-export class SysApiModule {
-}
+export class SysApiModule {}

@@ -12,5 +12,4 @@ export class DictService extends BaseCrudService<DictEntity> {
   ) {
     super(repo);
   }
-
 }

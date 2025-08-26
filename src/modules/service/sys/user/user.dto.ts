@@ -43,9 +43,7 @@ export class CreateUserDto {
   roleIds: number[];
 }
 
-
 export class UpdateUserDto {
-
   @IsString()
   @IsOptional()
   password: string;

@@ -12,7 +12,6 @@ export class CreateRoleDto {
   description: string;
 }
 
-
 export class UpdateRoleDto {
   @IsString()
   name: string;

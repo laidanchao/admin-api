@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC } from '@/common/public.decorator';
@@ -9,7 +14,7 @@ export class JwtAuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private jwtService: JwtService,
-    private cls: ClsService
+    private cls: ClsService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -22,18 +27,17 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.authorization?.replace('Bearer ', '')
+    const token = request.headers.authorization?.replace('Bearer ', '');
     if (!token) {
       throw new UnauthorizedException('token缺失');
     }
     try {
       const payload = await this.jwtService.verifyAsync(token);
-      this.cls.set('user',payload);
+      this.cls.set('user', payload);
       request['user'] = payload;
-    } catch(e) {
+    } catch {
       throw new UnauthorizedException('token有误');
     }
     return true;
   }
-
 }

@@ -29,5 +29,4 @@ import { OmsModule } from '@/modules/service/oms/oms.module';
     OmsModule,
   ],
 })
-export class AppModule {
-}
+export class AppModule {}

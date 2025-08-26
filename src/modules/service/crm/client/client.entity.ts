@@ -1,5 +1,12 @@
 import { CompleteEntity } from '@/common/basic.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  Relation,
+} from 'typeorm';
 import { ClientStage, ClientType } from '@/common/enums';
 import { UserEntity } from '@/modules/service/sys/user/user.entity';
 import { OrderEntity } from '@/modules/service/oms/order/order.entity';
@@ -36,10 +43,10 @@ export class ClientEntity extends CompleteEntity {
   @Column({ nullable: true })
   salerId: number;
 
-  @ManyToOne(() => UserEntity, user => user.clients)
+  @ManyToOne(() => UserEntity, (user) => user.clients)
   @JoinColumn({ name: 'saler_id' })
   saler: Relation<UserEntity>;
 
-  @OneToMany(() => OrderEntity, order => order.client)
+  @OneToMany(() => OrderEntity, (order) => order.client)
   orders: Relation<OrderEntity[]>;
 }

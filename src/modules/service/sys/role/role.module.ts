@@ -9,5 +9,4 @@ import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
   providers: [RoleService],
   exports: [RoleService],
 })
-export class RoleModule {
-}
+export class RoleModule {}

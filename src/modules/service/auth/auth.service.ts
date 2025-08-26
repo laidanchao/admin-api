@@ -12,8 +12,7 @@ export class AuthService {
     @InjectRepository(UserEntity)
     public readonly userRepo: Repository<UserEntity>,
     private readonly jwtService: JwtService,
-  ) {
-  }
+  ) {}
 
   /**
    * 登录
@@ -37,7 +36,7 @@ export class AuthService {
     if (user.status !== UserStatus.NORMAL) {
       throw new BadRequestException('用户状态异常');
     }
-    const roleCodes = user.roles.map(m => m.code);
+    const roleCodes = user.roles.map((m) => m.code);
 
     return this.jwtService.sign({
       id: user.id,

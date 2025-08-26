@@ -8,5 +8,4 @@ import { ClientEntity } from '@/modules/service/crm/client/client.entity';
   providers: [ClientService],
   exports: [ClientService],
 })
-export class ClientModule {
-}
+export class ClientModule {}

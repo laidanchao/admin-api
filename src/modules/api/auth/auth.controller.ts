@@ -4,8 +4,7 @@ import { Public } from '@/common/public.decorator';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly service: AuthService) {
-  }
+  constructor(private readonly service: AuthService) {}
 
   /**
    * 登录
@@ -13,7 +12,7 @@ export class AuthController {
    */
   @Public()
   @Post('login')
-  async login(@Body() body: { username: string, password: string }) {
+  async login(@Body() body: { username: string; password: string }) {
     return await this.service.login(body.username, body.password);
   }
 }

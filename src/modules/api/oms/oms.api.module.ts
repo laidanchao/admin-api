@@ -6,5 +6,4 @@ import { OmsModule } from '@/modules/service/oms/oms.module';
   imports: [OmsModule],
   controllers: [OrderController],
 })
-export class OmsApiModule {
-}
+export class OmsApiModule {}

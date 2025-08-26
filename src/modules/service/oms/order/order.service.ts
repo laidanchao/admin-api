@@ -12,5 +12,4 @@ export class OrderService extends BaseCrudService<OrderEntity> {
   ) {
     super(repo);
   }
-
 }

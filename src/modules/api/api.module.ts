@@ -6,8 +6,19 @@ import { AuthApiModule } from '@/modules/api/auth/auth.api.module';
 import { OmsApiModule } from '@/modules/api/oms/oms.api.module';
 
 @Module({
-  imports: [SysApiModule, FileApiModule, CrmApiModule, AuthApiModule, OmsApiModule],
-  exports: [SysApiModule, FileApiModule, CrmApiModule, AuthApiModule, OmsApiModule],
+  imports: [
+    SysApiModule,
+    FileApiModule,
+    CrmApiModule,
+    AuthApiModule,
+    OmsApiModule,
+  ],
+  exports: [
+    SysApiModule,
+    FileApiModule,
+    CrmApiModule,
+    AuthApiModule,
+    OmsApiModule,
+  ],
 })
-export class ApiModule {
-}
+export class ApiModule {}
