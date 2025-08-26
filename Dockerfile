@@ -10,7 +10,7 @@ COPY . .
 RUN npm run build
 
 FROM node:20-alpine AS production
-WORKDIR /usr/src/app
+WORKDIR /app
 # 只安装生产依赖
 COPY package*.json ./
 RUN npm ci --only=production
@@ -19,4 +19,4 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 # 暴露端口，启动应用
 EXPOSE 3000
-CMD [ "npm", "run", "start:prod" ] # 确保路径指向你的构建输出目录
+CMD ["/usr/local/bin/node", "/app/dist/main.js"]
