@@ -14,6 +14,6 @@ export const dataSourceOptions: DataSourceOptions = {
   subscribers: ['dist/modules/**/*.subscriber{.ts,.js}'],
   namingStrategy: new SnakeNamingStrategy(),
   logging: process.env.DB_LOGGING === 'true' || false,
-  migrationsRun: process.env.MIGRATION_RUN === 'true' || false
+  migrationsRun: process.env.MIGRATION_RUN === 'true' || false,
 };
 export const dataSource = new DataSource(dataSourceOptions);
