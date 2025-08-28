@@ -6,13 +6,8 @@ import { MenuModule } from '@/modules/service/sys/menu/menu.module';
 import { FileModule } from '@/modules/service/file/file.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserEntity]),
-    MenuModule,
-    FileModule,
-  ],
+  imports: [TypeOrmModule.forFeature([UserEntity]), MenuModule, FileModule],
   providers: [UserService],
   exports: [UserService],
 })
-export class UserModule {
-}
+export class UserModule {}

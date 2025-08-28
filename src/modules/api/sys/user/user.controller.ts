@@ -3,7 +3,10 @@ import { Crud } from '@dataui/crud';
 import { UserService } from '@/modules/service/sys/user/user.service';
 import { UserEntity } from '@/modules/service/sys/user/user.entity';
 import { User, UserDto } from '@/common/user.decorator';
-import { CreateUserDto, UpdateUserDto } from '@/modules/service/sys/user/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+} from '@/modules/service/sys/user/user.dto';
 import { MenuTreeNode } from '@/modules/service/sys/menu/menu.dto';
 import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
 
@@ -15,23 +18,18 @@ import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
     only: ['getManyBase', 'getOneBase'],
   },
   query: {
-    query: {
-      sort: [{ field: 'id', order: 'DESC' }],
-    },
+    sort: [{ field: 'id', order: 'DESC' }],
     join: {
       dept: {
         eager: true,
-      }
+      },
     },
-    filter: [
-      { field: 'userNo', operator: 'ne', value: '000' },
-    ],
+    filter: [{ field: 'userNo', operator: 'ne', value: '000' }],
   },
 })
 @Controller('sys/user')
 export class UserController {
-  constructor(private readonly service: UserService) {
-  }
+  constructor(private readonly service: UserService) {}
 
   /**
    * 获取当前用户信息
@@ -86,7 +84,11 @@ export class UserController {
    * @param user
    */
   @Post('updateUser/:id')
-  async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto, @User() user: UserDto) {
+  async updateUser(
+    @Param('id') id: number,
+    @Body() body: UpdateUserDto,
+    @User() user: UserDto,
+  ) {
     return await this.service.updateUser(id, body, user);
   }
 
@@ -104,7 +106,11 @@ export class UserController {
    * @param body
    */
   @Post('resetPassword/:id')
-  async resetPassword(@Param('id') id: number, @Body() body: { password: string }, @User() user: UserDto) {
+  async resetPassword(
+    @Param('id') id: number,
+    @Body() body: { password: string },
+    @User() user: UserDto,
+  ) {
     return await this.service.resetPassword(id, body.password, user);
   }
 
@@ -124,10 +130,13 @@ export class UserController {
    * @param user
    */
   @Post('changePassword')
-  async changePassword(@Body() body: { oldPassword: string, newPassword: string, confirmPassword: string }, @User() user: UserDto) {
+  async changePassword(
+    @Body()
+    body: { oldPassword: string; newPassword: string; confirmPassword: string },
+    @User() user: UserDto,
+  ) {
     return await this.service.changePassword(user.userId, body);
   }
-
 
   /**
    * 修改头像
@@ -138,7 +147,6 @@ export class UserController {
   async updateAvatar(@Body() body: { avatar: string }, @User() user: UserDto) {
     return await this.service.updateAvatar(user.userId, body.avatar);
   }
-
 
   /**
    * 获取销售员

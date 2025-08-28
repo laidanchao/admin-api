@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { RoleService } from '@/modules/service/sys/role/role.service';
 import { Crud } from '@dataui/crud';
 import { RoleEntity } from '@/modules/service/sys/role/role.entity';
-import { CreateRoleDto, UpdateRoleDto } from '@/modules/service/sys/role/role.dto';
+import {
+  CreateRoleDto,
+  UpdateRoleDto,
+} from '@/modules/service/sys/role/role.dto';
 import { User, UserDto } from '@/common/user.decorator';
 
 @Crud({
@@ -14,15 +17,12 @@ import { User, UserDto } from '@/common/user.decorator';
     create: CreateRoleDto,
   },
   query: {
-    filter: [
-      { field: 'code', operator: 'ne', value: 'ROOT' },
-    ],
+    filter: [{ field: 'code', operator: 'ne', value: 'ROOT' }],
   },
 })
 @Controller('sys/role')
 export class RoleController {
-  constructor(private readonly service: RoleService) {
-  }
+  constructor(private readonly service: RoleService) {}
 
   /**
    * 获取角色下拉数据源
@@ -46,7 +46,11 @@ export class RoleController {
    * @param id
    */
   @Post('updateRoleMenus/:id')
-  async updateRoleMenus(@Param('id') id: number, @Body() menuIds: number[], @User() user: UserDto) {
+  async updateRoleMenus(
+    @Param('id') id: number,
+    @Body() menuIds: number[],
+    @User() user: UserDto,
+  ) {
     return await this.service.updateRoleMenus(id, menuIds, user);
   }
 

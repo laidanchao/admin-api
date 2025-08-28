@@ -8,5 +8,4 @@ import { MenuService } from '@/modules/service/sys/menu/menu.service';
   providers: [MenuService],
   exports: [MenuService],
 })
-export class MenuModule {
-}
+export class MenuModule {}

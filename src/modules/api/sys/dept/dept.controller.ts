@@ -1,13 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { DeptService } from '@/modules/service/sys/dept/dept.service';
 import { AddDeptDto, UpdateDeptDto } from '@/modules/service/sys/dept/dept.dto';
 import { User, UserDto } from '@/common/user.decorator';
 
-
 @Controller('sys/dept')
 export class DeptController {
-  constructor(private readonly service: DeptService) {
-  }
+  constructor(private readonly service: DeptService) {}
 
   /**
    * 查询完整部门树
@@ -55,7 +61,11 @@ export class DeptController {
    * @param id
    */
   @Put(':id')
-  async updateOne(@Param('id') id: number, @Body() body: UpdateDeptDto, @User() user: UserDto) {
+  async updateOne(
+    @Param('id') id: number,
+    @Body() body: UpdateDeptDto,
+    @User() user: UserDto,
+  ) {
     return await this.service.updateOne(id, body, user);
   }
 
@@ -85,5 +95,4 @@ export class DeptController {
   async deleteByIds(@Body() ids: number[]) {
     return await this.service.deleteByIds(ids);
   }
-
 }

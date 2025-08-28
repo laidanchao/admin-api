@@ -5,19 +5,22 @@ export const CrudAcl = (field: string) => (target: any) => {
     throw new Error('field is required');
   }
 
-  R.setCrudAuthOptions({
-    property: 'user',
-    filter: (user) => {
-      if (user.roles.includes('ROOT') || user.roles.includes('MANAGER')) {
-        return {};
-      }
-      return { [field]: user.id };
+  R.setCrudAuthOptions(
+    {
+      property: 'user',
+      filter: (user) => {
+        if (user.roles.includes('ROOT') || user.roles.includes('MANAGER')) {
+          return {};
+        }
+        return { [field]: user.id };
+      },
+      persist: (user: any) => {
+        if (user.roles.includes('ROOT') || user.roles.includes('MANAGER')) {
+          return {};
+        }
+        return { [field]: user.id };
+      },
     },
-    persist: (user: any) => {
-      if (user.roles.includes('ROOT') || user.roles.includes('MANAGER')) {
-        return {};
-      }
-      return { [field]: user.id };
-    },
-  }, target);
+    target,
+  );
 };

@@ -16,7 +16,12 @@ export class DictItemEntity extends CompleteEntity {
   @Column({ nullable: true, comment: '字典项描述', length: 255 })
   itemDesc: string;
 
-  @Column({ nullable: true, type: 'varchar', enum: DictItemTagType, comment: '标签类型（前端回显样式）' })
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    enum: DictItemTagType,
+    comment: '标签类型（前端回显样式）',
+  })
   tagType: DictItemTagType;
 
   @Column({ comment: '是否激活', default: true })

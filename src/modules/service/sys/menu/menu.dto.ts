@@ -1,5 +1,5 @@
 import { MenuType } from '@/common/enums';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class MenuTreeNode {
   id: number;
@@ -45,7 +45,6 @@ export class CreateMenuDto {
   @IsNumber()
   @IsOptional()
   sort: number;
-
 }
 
 export class UpdateMenuDto {

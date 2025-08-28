@@ -1,29 +1,28 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-
-export class DeptTreeDto{
+export class DeptTreeDto {
   // 部门id
   value: string | number;
   // 部门名称
   label: string;
   // 子部门
-  children?: DeptTreeDto[]
+  children?: DeptTreeDto[];
 }
 
-export class AddDeptDto{
+export class AddDeptDto {
   @IsString()
   @IsNotEmpty()
-  name:string;
+  name: string;
 
   @IsNumber()
   @IsNotEmpty()
-  parentId:number;
+  parentId: number;
 }
 
-export class UpdateDeptDto{
+export class UpdateDeptDto {
   @IsString()
-  name:string;
+  name: string;
 
   @IsNumber()
-  parentId:number;
+  parentId: number;
 }

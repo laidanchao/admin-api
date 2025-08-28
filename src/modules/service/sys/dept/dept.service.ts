@@ -11,8 +11,7 @@ export class DeptService {
   constructor(
     @InjectRepository(DeptEntity)
     public readonly repo: TreeRepository<DeptEntity>,
-  ) {
-  }
+  ) {}
 
   /**
    * 查询完整部门树
@@ -51,7 +50,6 @@ export class DeptService {
    * @param operator
    */
   async addOne(body: AddDeptDto, operator: UserDto) {
-
     let parent = null;
     if (body.parentId > 0) {
       parent = await this.repo.findOne({
@@ -87,7 +85,6 @@ export class DeptService {
     return await this.repo.update(id, dept);
   }
 
-
   async deleteByIds(ids: number[]) {
     const depts = await this.repo.find({
       where: {
@@ -96,11 +93,11 @@ export class DeptService {
       relations: ['children', 'users'],
     });
 
-    if (depts.some(s => s.children.length > 0)) {
+    if (depts.some((s) => s.children.length > 0)) {
       throw new BadRequestException('该部门下还有子部门');
     }
 
-    if (depts.some(s => s.users.length > 0)) {
+    if (depts.some((s) => s.users.length > 0)) {
       throw new BadRequestException('该部门下还有员工');
     }
 

@@ -20,7 +20,7 @@ export class DictItemService extends BaseCrudService<DictItemEntity> {
         dictCode,
       },
     });
-    return roles.map(m => {
+    return roles.map((m) => {
       return {
         value: m.itemCode,
         label: m.itemName,

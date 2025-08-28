@@ -6,9 +6,8 @@ import { DictItemService } from '@/modules/service/sys/dict/dict-item.service';
 import { DictItemEntity } from '@/modules/service/sys/dict/dict-item.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DictEntity,DictItemEntity])],
+  imports: [TypeOrmModule.forFeature([DictEntity, DictItemEntity])],
   providers: [DictService, DictItemService],
   exports: [DictService, DictItemService],
 })
-export class DictModule {
-}
+export class DictModule {}

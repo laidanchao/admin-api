@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { getEnvironmentData } from 'worker_threads';
 import Utils from '@/common/utils';
 
 const aesAlgorithm = 'aes-256-cbc';
@@ -29,4 +28,3 @@ const aesDecrypt = (pwd: string) => {
 };
 
 export { aesEncrypt, aesDecrypt };
-

@@ -6,12 +6,12 @@ import { ClsService } from 'nestjs-cls';
 import { UserDto } from '@/common/user.decorator';
 
 @Injectable()
-export class BaseCrudService<T extends ObjectLiteral> extends TypeOrmCrudService<T> {
+export class BaseCrudService<
+  T extends ObjectLiteral,
+> extends TypeOrmCrudService<T> {
   @Inject(ClsService)
-  protected readonly cls: ClsService
-  constructor(
-    protected readonly repo: Repository<T>,
-  ) {
+  protected readonly cls: ClsService;
+  constructor(protected readonly repo: Repository<T>) {
     super(repo);
   }
 

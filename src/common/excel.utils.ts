@@ -1,7 +1,6 @@
 import XLSX from 'xlsx';
 
 class ExcelUtils {
-
   /**
    * 读取excel数据
    * @param path
@@ -35,7 +34,6 @@ class ExcelUtils {
     XLSX.utils.book_append_sheet(newWorkbook, worksheet, 'Sheet1');
     XLSX.writeFile(newWorkbook, savePath);
   }
-
 }
 
 export default new ExcelUtils();

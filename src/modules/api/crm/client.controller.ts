@@ -1,4 +1,10 @@
-import { BadRequestException, Controller, NestInterceptor, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ClientService } from '@/modules/service/crm/client/client.service';
 import { ClientEntity } from '@/modules/service/crm/client/client.entity';
 import { Crud } from '@dataui/crud';
@@ -22,23 +28,26 @@ import { User, UserDto } from '@/common/user.decorator';
 @CrudAcl('salerId')
 @Controller('crm/client')
 export class ClientController {
-  constructor(private readonly service: ClientService) {
-  }
+  constructor(private readonly service: ClientService) {}
 
   @Post('import')
-  @UseInterceptors(FileInterceptor('file', {
-    fileFilter: (req, file, callback) => {
-      if (!file.originalname.match(/\.(xls|xlsx|csv)$/)) {
-        return callback(new BadRequestException('只允许excel文件'), false);
-      }
-      callback(null, true);
-    },
-    limits: {
-      fileSize: 10 * 1024 * 1024, // 10MB
-    },
-  }) as NestInterceptor)
-  async import(@UploadedFile() file: Express.Multer.File, @User() user: UserDto) {
+  @UseInterceptors(
+    FileInterceptor('file', {
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(xls|xlsx|csv)$/)) {
+          return callback(new BadRequestException('只允许excel文件'), false);
+        }
+        callback(null, true);
+      },
+      limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB
+      },
+    }),
+  )
+  async import(
+    @UploadedFile() file: Express.Multer.File,
+    @User() user: UserDto,
+  ) {
     return this.service.import(file, user);
   }
-
 }

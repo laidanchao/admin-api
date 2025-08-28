@@ -2,8 +2,11 @@ import { BadRequestException, Get, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Like, Repository } from 'typeorm';
 import { MenuEntity } from '@/modules/service/sys/menu/menu.entity';
-import { CreateMenuDto, MenuTreeNode, UpdateMenuDto } from '@/modules/service/sys/menu/menu.dto';
-import { MenuType } from '@/common/enums';
+import {
+  CreateMenuDto,
+  MenuTreeNode,
+  UpdateMenuDto,
+} from '@/modules/service/sys/menu/menu.dto';
 import Utils from '@/common/utils';
 import { OptionDto } from '@/common/common.dto';
 import { TypeOrmCrudService } from '@dataui/crud-typeorm';
@@ -26,7 +29,6 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
     return Utils.convertToFrontTreeDto(trees);
   }
 
-
   /**
    * 拼接菜单树
    * @param menus
@@ -36,7 +38,7 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
     const menuMap = new Map<number, MenuTreeNode>();
     const tree: MenuTreeNode[] = [];
     // 创建ID到菜单的映射
-    menus.forEach(menu => {
+    menus.forEach((menu) => {
       menuMap.set(menu.id, {
         id: menu.id,
         parentId: menu.parentId,
@@ -51,8 +53,12 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
     });
 
     // 构建树
-    menuMap.forEach(menu => {
-      if (!menu.parentId || (!menuMap.has(menu.parentId) && !menus.some(s => s.id === menu.parentId))) {
+    menuMap.forEach((menu) => {
+      if (
+        !menu.parentId ||
+        (!menuMap.has(menu.parentId) &&
+          !menus.some((s) => s.id === menu.parentId))
+      ) {
         tree.push(menu);
       } else {
         const parent = menuMap.get(menu.parentId);
@@ -82,14 +88,13 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
     return this.buildMenuTree(menus);
   }
 
-
   /**
    * 获取菜单下拉数据源
    */
   @Get('options')
   async getOptions(): Promise<OptionDto[]> {
     const roles = await this.repo.find();
-    return roles.map(m => {
+    return roles.map((m) => {
       return <OptionDto>{
         value: m.id,
         label: m.name,
@@ -144,7 +149,7 @@ export class MenuService extends TypeOrmCrudService<MenuEntity> {
       relations: ['children'],
     });
 
-    if (menus.some(s => s.children.length > 0)) {
+    if (menus.some((s) => s.children.length > 0)) {
       throw new BadRequestException('该菜单下还有子菜单');
     }
 

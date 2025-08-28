@@ -42,8 +42,7 @@ export class FileService {
    * 下载文件
    * @param key
    */
-  async getDownloadUrl(key: string) {
-    return await new Qiniu().getDownloadUrl(key);
+  getDownloadUrl(key: string) {
+    return new Qiniu().getDownloadUrl(key);
   }
-
 }

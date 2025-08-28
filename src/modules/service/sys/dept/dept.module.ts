@@ -8,5 +8,4 @@ import { DeptEntity } from '@/modules/service/sys/dept/dept.entity';
   providers: [DeptService],
   exports: [DeptService],
 })
-export class DeptModule {
-}
+export class DeptModule {}

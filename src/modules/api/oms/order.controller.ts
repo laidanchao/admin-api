@@ -14,6 +14,5 @@ import { OrderService } from '@/modules/service/oms/order/order.service';
 })
 @Controller('oms/order')
 export class OrderController {
-  constructor(private readonly service: OrderService) {
-  }
+  constructor(private readonly service: OrderService) {}
 }

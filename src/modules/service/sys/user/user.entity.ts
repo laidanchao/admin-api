@@ -1,5 +1,14 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  Relation,
+} from 'typeorm';
 import { CompleteEntity } from '@/common/basic.entity';
 import { RoleEntity } from '@/modules/service/sys/role/role.entity';
 import { DeptEntity } from '@/modules/service/sys/dept/dept.entity';
@@ -37,13 +46,19 @@ export class UserEntity extends CompleteEntity {
   @Column({ nullable: true, length: 20 })
   phone: string;
 
-  @Column({ nullable: true, default: UserStatus.NORMAL, length: 20, enum: UserStatus, type: 'varchar' })
+  @Column({
+    nullable: true,
+    default: UserStatus.NORMAL,
+    length: 20,
+    enum: UserStatus,
+    type: 'varchar',
+  })
   status: UserStatus;
 
   @Column({ nullable: true })
   deptId: number;
 
-  @ManyToMany(() => RoleEntity, role => role.users)
+  @ManyToMany(() => RoleEntity, (role) => role.users)
   @JoinTable({
     name: 'sys_user_roles',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
@@ -51,13 +66,13 @@ export class UserEntity extends CompleteEntity {
   })
   roles: Relation<RoleEntity[]>;
 
-  @ManyToOne(() => DeptEntity, dept => dept.users)
+  @ManyToOne(() => DeptEntity, (dept) => dept.users)
   @JoinColumn({ name: 'dept_id' })
   dept: Relation<DeptEntity>;
 
-  @OneToMany(() => ClientEntity, client => client.saler)
+  @OneToMany(() => ClientEntity, (client) => client.saler)
   clients: Relation<ClientEntity[]>;
 
-  @OneToMany(() => OrderEntity, order => order.saler)
+  @OneToMany(() => OrderEntity, (order) => order.saler)
   orders: Relation<OrderEntity[]>;
 }

@@ -8,5 +8,4 @@ import { OrderEntity } from '@/modules/service/oms/order/order.entity';
   providers: [OrderService],
   exports: [OrderService],
 })
-export class OrderModule {
-}
+export class OrderModule {}

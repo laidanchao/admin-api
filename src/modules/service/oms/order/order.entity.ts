@@ -41,11 +41,11 @@ export class OrderEntity extends CompleteEntity {
   @Column({ nullable: true, comment: '最后一次支付时间' })
   lastPaidAt: Date;
 
-  @ManyToOne(() => ClientEntity, client => client.orders)
+  @ManyToOne(() => ClientEntity, (client) => client.orders)
   @JoinColumn({ name: 'client_id' })
   client: Relation<ClientEntity>;
 
-  @ManyToOne(() => UserEntity, user => user.orders)
+  @ManyToOne(() => UserEntity, (user) => user.orders)
   @JoinColumn({ name: 'saler_id' })
   saler: Relation<UserEntity>;
 }

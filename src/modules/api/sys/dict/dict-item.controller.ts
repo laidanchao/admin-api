@@ -13,8 +13,7 @@ import { DictItemService } from '@/modules/service/sys/dict/dict-item.service';
 })
 @Controller('sys/dict-item')
 export class DictItemController {
-  constructor(private readonly service: DictItemService) {
-  }
+  constructor(private readonly service: DictItemService) {}
 
   @Get('options/:dictCode')
   async options(@Param('dictCode') dictCode: string) {

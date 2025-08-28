@@ -8,9 +8,9 @@ import { FileService } from '@/modules/service/file/file.service';
       limits: {
         fileSize: 10 * 1024 * 1024, // 10MB
       },
-    })],
+    }),
+  ],
   providers: [FileService],
   exports: [FileService],
 })
-export class FileModule {
-}
+export class FileModule {}
