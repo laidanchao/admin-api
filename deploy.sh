@@ -5,7 +5,7 @@ set -e # 遇到任何错误立即退出脚本
 
 # ============ 配置区域 ============
 # 请修改以下变量以匹配你的服务器信息
-TARGET_SERVER="root@47.239.125.226" # 服务器登录用户名和IP
+TARGET_SERVER="root@47.239.86.44" # 服务器登录用户名和IP
 APP_NAME="admin-api"
 APP_DIR="/opt/admin/$APP_NAME"                  # 服务器上项目存放的绝对路径
 BRANCH="production"                             # 要部署的Git分支
