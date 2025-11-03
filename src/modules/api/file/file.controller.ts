@@ -23,7 +23,7 @@ export class FileController {
   @UseInterceptors(
     FileInterceptor('file', {
       fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif|mp4)$/)) {
           return callback(new BadRequestException('只允许上传图片文件'), false);
         }
         callback(null, true);
