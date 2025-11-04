@@ -1,8 +1,10 @@
-
 export class FeedDto {
   realName: string;
   idNo: string;
   phone: string;
+  city: string;
+  serviceArea: string;
+  direction: string;
   comment: string;
   details: FeedDetails[];
 }
@@ -17,7 +19,6 @@ export class FeedDetails {
   locationName: string;
 
   imgKey: string;
-
 
   coverImgKey: string;
 
