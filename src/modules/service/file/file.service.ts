@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Qiniu } from '@/common/qiniu';
+import ExcelUtils from '@/common/excel.utils';
+import ImgUtils from '@/common/img.utils';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class FileService {
@@ -19,8 +22,16 @@ export class FileService {
     filePath = filePath || 'images';
     const key = `${filePath}/${randomUUID()}.${ext}`;
 
+    let buffer = file.buffer;
+    if (filePath.includes('images/bigong')) {
+      buffer = await ImgUtils.addTextWatermark(
+        buffer,
+        dayjs().format('YYYY-MM-DD'),
+      );
+    }
+
     // 上传到七牛云
-    const url = await new Qiniu().upload(file, key);
+    const url = await new Qiniu().upload(buffer, key);
 
     return {
       url,

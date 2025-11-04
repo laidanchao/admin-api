@@ -11,6 +11,17 @@ RUN npm run build
 
 FROM node:20-alpine AS production
 WORKDIR /app
+
+# 只在生产阶段安装字体
+RUN apk add --no-cache \
+    fontconfig \
+    ttf-dejavu \
+    ttf-freefont \
+    ttf-liberation
+
+# 验证字体安装
+RUN fc-list && echo "字体安装完成"
+
 # 只安装生产依赖
 COPY package*.json ./
 RUN npm ci --only=production

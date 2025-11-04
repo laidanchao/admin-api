@@ -20,7 +20,7 @@ export class Qiniu {
     return putPolicy.uploadToken(this.Mac);
   }
 
-  upload(file: Express.Multer.File, key: string): Promise<string> {
+  upload(buffer: Buffer, key: string): Promise<string> {
     const token = this.getToken();
     const formUploader = new qiniu.form_up.FormUploader();
     const putExtra = new qiniu.form_up.PutExtra();
@@ -28,7 +28,7 @@ export class Qiniu {
       formUploader.put(
         token,
         key,
-        file.buffer,
+        buffer,
         putExtra,
         (respErr, respBody, respInfo) => {
           if (respErr) {
