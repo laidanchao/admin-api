@@ -5,6 +5,7 @@ import { CrmApiModule } from '@/modules/api/crm/crm.api.module';
 import { AuthApiModule } from '@/modules/api/auth/auth.api.module';
 import { OmsApiModule } from '@/modules/api/oms/oms.api.module';
 import { DashboardController } from '@/modules/api/dashboard.controller';
+import { FeedApiModule } from '@/modules/api/out/feed.api.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { DashboardController } from '@/modules/api/dashboard.controller';
     CrmApiModule,
     AuthApiModule,
     OmsApiModule,
+    FeedApiModule,
   ],
   exports: [
     SysApiModule,
@@ -20,6 +22,7 @@ import { DashboardController } from '@/modules/api/dashboard.controller';
     CrmApiModule,
     AuthApiModule,
     OmsApiModule,
+    FeedApiModule,
   ],
   controllers: [DashboardController],
 })

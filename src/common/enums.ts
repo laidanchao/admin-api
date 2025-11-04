@@ -68,3 +68,9 @@ export enum OrderPayStatus {
   'PART_PAID' = 'PART_PAID',
   'PAID' = 'PAID',
 }
+
+export enum FeedAuditStatus {
+  'WAITING' = 'WAITING',
+  'SUCCESS' = 'SUCCESS',
+  'FAILED' = 'FAILED',
+}

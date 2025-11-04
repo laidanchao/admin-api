@@ -3,10 +3,10 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  host: process.env.DB_HOST || '127.0.0.1',
-  port: Number(process.env.DB_PORT) || 5434,
+  host: process.env.DB_HOST || '47.239.86.44',
+  port: Number(process.env.DB_PORT) || 5432,
   username: process.env.DB_USERNAME || 'postgres',
-  password: process.env.DB_PASSWORD || '123456',
+  password: process.env.DB_PASSWORD || 'Gmd5201314',
   database: process.env.DB_DATABASE || 'crm',
   synchronize: process.env.DB_SYNCHRONIZE === 'true' || false,
   entities: ['dist/modules/**/*.entity{.ts,.js}'],
