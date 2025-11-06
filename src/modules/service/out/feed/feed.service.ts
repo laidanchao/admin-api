@@ -8,6 +8,8 @@ import { FeedAuditStatus } from '@/common/enums';
 import { FeedDetailEntity } from '@/modules/service/out/feed/feed-detail.entity';
 import * as ExcelJS from 'exceljs';
 import { Qiniu } from '@/common/qiniu';
+import { forEach } from 'lodash';
+import qiniu from 'qiniu';
 
 @Injectable()
 export class FeedService extends BaseCrudService<FeedEntity> {
@@ -291,5 +293,28 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     } catch {
       return 'jpeg';
     }
+  }
+
+
+  async getDetails(id: number) {
+    const feed = await this.repo.findOne({
+      where: { id },
+      relations: ['details'],
+    });
+
+    return feed.details.map((m) => {
+      let fileUrl = '';
+      if (m.imgKey) {
+        fileUrl = new Qiniu().getDownloadUrl(m.imgKey);
+      }
+
+      return {
+        areaName: m.areaName,
+        locationName: m.locationName,
+        idVideo: m.isVideo,
+        fileUrl,
+      };
+    });
+
   }
 }

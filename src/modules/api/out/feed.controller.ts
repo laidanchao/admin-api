@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { Crud } from '@dataui/crud';
 import { FeedService } from '@/modules/service/out/feed/feed.service';
 import { FeedEntity } from '@/modules/service/out/feed/feed.entity';
@@ -10,11 +10,6 @@ import { FeedAuditStatus } from '@/common/enums';
     type: FeedEntity,
   },
   query: {
-    join: {
-      details: {
-        eager: true,
-      },
-    },
     sort: [{ field: 'id', order: 'DESC' }],
   },
 })
@@ -25,6 +20,11 @@ export class FeedController {
   @Post('save')
   save(@Body() body: FeedDto) {
     return this.service.save(body);
+  }
+
+  @Get('details/:id')
+  getDetails(@Param('id') id: number) {
+    return this.service.getDetails(id);
   }
 
   @Post('export')
