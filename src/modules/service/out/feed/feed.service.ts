@@ -295,7 +295,6 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     }
   }
 
-
   async getDetails(id: number) {
     const feed = await this.repo.findOne({
       where: { id },
@@ -304,18 +303,22 @@ export class FeedService extends BaseCrudService<FeedEntity> {
 
     return feed.details.map((m) => {
       let fileUrl = '';
+      let coverImgUrl = '';
       if (m.imgKey) {
         fileUrl = new Qiniu().getDownloadUrl(m.imgKey);
+      }
+      if (m.coverImgKey) {
+        coverImgUrl = new Qiniu().getDownloadUrl(m.coverImgKey);
       }
 
       return {
         areaName: m.areaName,
         locationName: m.locationName,
-        idVideo: m.isVideo,
+        isVideo: m.isVideo,
         createdAt: m.createdAt,
         fileUrl,
+        coverImgUrl,
       };
     });
-
   }
 }
