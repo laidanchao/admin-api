@@ -41,6 +41,9 @@ ssh $TARGET_SERVER << EOF
   mv -f .env.tmp .env
   chmod 600 .env
 
+  echo "--- 清理旧的Docker资源释放内存 ---"
+  docker system prune -f
+
   echo “--- 构建Docker镜像（利用缓存加速） ---”
   # --build 参数强制重新构建镜像
   docker compose build admin-api
@@ -54,6 +57,9 @@ ssh $TARGET_SERVER << EOF
 
   echo “--- 检查应用状态 ---”
   docker compose ps
+
+  echo "--- 再次清理释放内存 ---"
+  docker system prune -f
 EOF
 
 # 第4步：部署完成

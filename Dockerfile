@@ -30,4 +30,4 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 # 暴露端口，启动应用
 EXPOSE 3000
-CMD ["/usr/local/bin/node", "/app/dist/main.js"]
+CMD ["node", "--max-old-space-size=512", "/app/dist/main.js"]

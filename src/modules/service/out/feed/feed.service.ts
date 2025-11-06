@@ -312,6 +312,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
         areaName: m.areaName,
         locationName: m.locationName,
         idVideo: m.isVideo,
+        createdAt: m.createdAt,
         fileUrl,
       };
     });
