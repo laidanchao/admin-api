@@ -56,6 +56,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     city: string;
     serviceArea: string;
     auditStatus: FeedAuditStatus;
+    onlyUrl: boolean;
   }) {
     const feeds = await this.repo
       .createQueryBuilder('feed')
@@ -75,10 +76,13 @@ export class FeedService extends BaseCrudService<FeedEntity> {
       })
       .getMany();
 
-    return this.exportWithImages(feeds);
+    return this.exportWithImages(feeds, body.onlyUrl);
   }
 
-  async exportWithImages(data: FeedEntity[]): Promise<Buffer> {
+  async exportWithImages(
+    data: FeedEntity[],
+    onlyUrl: boolean,
+  ): Promise<Buffer> {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('评价记录');
 
@@ -94,6 +98,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
       { header: '评价', key: 'comment', width: 30 },
       { header: '区域', key: 'areaName', width: 15 },
       { header: '位置', key: 'locationName', width: 30 },
+      { header: '下载地址（24小时有效）', key: 'url', width: 50 },
       { header: '照片', key: 'imgKey', width: 25 },
     ];
     const auditStatusMap = {
@@ -112,6 +117,10 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     for (const item of data) {
       for (let i = 0; i < item.details.length; i++) {
         const subItem = item.details[i];
+        let url = '';
+        if (subItem.imgKey) {
+          url = new Qiniu().getDownloadUrl(subItem.imgKey, 24);
+        }
         const rowData = {
           realName: i === 0 ? item.realName : '',
           idNo: i === 0 ? item.idNo : '',
@@ -123,6 +132,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
           comment: i === 0 ? item.comment : '',
           areaName: subItem.areaName,
           locationName: subItem.locationName,
+          url: url,
         };
 
         const row = worksheet.addRow(rowData);
@@ -144,10 +154,12 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     console.log(`所有数据行创建完成，共${currentRow - 2}行`);
     console.log(`需要处理${imageTasks.length}张图片`);
 
-    // 第二步：单独处理所有图片
-    for (const task of imageTasks) {
-      console.log(`开始处理第${task.row}行图片: ${task.imgKey}`);
-      await this.addQiniuImageToCell(worksheet, task.imgKey, task.row);
+    if (!onlyUrl) {
+      // 第二步：单独处理所有图片
+      for (const task of imageTasks) {
+        console.log(`开始处理第${task.row}行图片: ${task.imgKey}`);
+        await this.addQiniuImageToCell(worksheet, task.imgKey, task.row);
+      }
     }
 
     const buffer = await workbook.xlsx.writeBuffer();
@@ -175,8 +187,8 @@ export class FeedService extends BaseCrudService<FeedEntity> {
         extension: extension as 'png' | 'jpeg' | 'gif',
       });
 
-      // 计算单元格位置（K列是第11列，索引为10）
-      const colIndex = 10;
+      // 计算单元格位置（L列是第12列，索引为11）
+      const colIndex = 11;
       const rowIndex = currentRow - 1;
       console.log('currentRow', currentRow);
       worksheet.addImage(imageId, {

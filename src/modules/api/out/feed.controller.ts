@@ -35,6 +35,7 @@ export class FeedController {
       city: string;
       serviceArea: string;
       auditStatus: FeedAuditStatus;
+      onlyUrl: boolean;
     },
     @Res() res: Response,
   ) {

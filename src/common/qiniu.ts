@@ -87,10 +87,11 @@ export class Qiniu {
   /**
    * 获取文件下载地址
    * @param key
+   * @param hours 有效小时数
    */
-  getDownloadUrl(key: string) {
+  getDownloadUrl(key: string, hours = 1) {
     const bucketManager = new qiniu.rs.BucketManager(this.Mac);
-    const deadline = dayjs().add(1, 'hour').unix();
+    const deadline = dayjs().add(hours, 'hour').unix();
     return bucketManager.privateDownloadUrl(
       process.env.QINIU_DOMAIN,
       key,
