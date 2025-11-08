@@ -47,4 +47,12 @@ export class FileController {
   getClientTemplate() {
     return this.fileService.getDownloadUrl('template/客户导入模板.xlsx');
   }
+
+  /**
+   * 获取七牛token
+   */
+  @Get('getQiNiuToken')
+  getQiNiuToken(){
+    return this.fileService.getQiNiuToken();
+  }
 }

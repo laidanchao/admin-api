@@ -4,6 +4,7 @@ import { Qiniu } from '@/common/qiniu';
 import ExcelUtils from '@/common/excel.utils';
 import ImgUtils from '@/common/img.utils';
 import dayjs from 'dayjs';
+import qiniu from 'qiniu';
 
 @Injectable()
 export class FileService {
@@ -55,5 +56,9 @@ export class FileService {
    */
   getDownloadUrl(key: string) {
     return new Qiniu().getDownloadUrl(key);
+  }
+
+  getQiNiuToken() {
+    return new Qiniu().getToken();
   }
 }
