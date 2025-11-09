@@ -23,7 +23,13 @@ export class FeedDetailEntity extends BasicEntity {
   imgKey: string;
 
   @Column({ nullable: true })
+  imgUrl: string;
+
+  @Column({ nullable: true })
   coverImgKey: string;
+
+  @Column({ nullable: true })
+  coverImgUrl: string;
 
   @Column({ nullable: true })
   isVideo: boolean;

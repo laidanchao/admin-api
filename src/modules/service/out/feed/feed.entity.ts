@@ -29,6 +29,18 @@ export class FeedEntity extends CompleteEntity {
   @Column({ length: 20, type: 'varchar', enum: FeedAuditStatus })
   auditStatus: FeedAuditStatus;
 
+  @Column({ nullable: true, type: 'timestamp' })
+  visitedAt: Date;
+
+  @Column({ nullable: true })
+  location: string;
+
+  @Column({ nullable: true })
+  selfImgKey: string;
+
+  @Column({ nullable: true })
+  selfImgUrl: string;
+
   @OneToMany(() => FeedDetailEntity, (detail) => detail.feed)
   details: Relation<FeedDetailEntity[]>;
 }

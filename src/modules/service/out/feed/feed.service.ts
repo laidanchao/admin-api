@@ -7,9 +7,7 @@ import { FeedDto } from '@/modules/service/out/feed/feed.dto';
 import { FeedAuditStatus } from '@/common/enums';
 import { FeedDetailEntity } from '@/modules/service/out/feed/feed-detail.entity';
 import * as ExcelJS from 'exceljs';
-import { Qiniu } from '@/common/qiniu';
-import { forEach } from 'lodash';
-import qiniu from 'qiniu';
+
 
 @Injectable()
 export class FeedService extends BaseCrudService<FeedEntity> {
@@ -32,6 +30,10 @@ export class FeedService extends BaseCrudService<FeedEntity> {
       direction: body.direction,
       comment: body.comment,
       auditStatus: FeedAuditStatus.WAITING,
+      location: body.location,
+      visitedAt: body.visitedAt,
+      selfImgKey: body.selfImgKey,
+      selfImgUrl: body.selfImgUrl,
       createdBy: 'ldc',
     });
 
@@ -43,7 +45,9 @@ export class FeedService extends BaseCrudService<FeedEntity> {
         locationCode: m.locationCode,
         locationName: m.locationName,
         imgKey: m.imgKey,
+        imgUrl: m.imgUrl,
         coverImgKey: m.coverImgKey,
+        coverImgUrl: m.coverImgUrl,
         isVideo: m.isVideo,
       });
     });
@@ -94,7 +98,10 @@ export class FeedService extends BaseCrudService<FeedEntity> {
       { header: '城市', key: 'city', width: 15 },
       { header: '服务区', key: 'serviceArea', width: 15 },
       { header: '行驶方向', key: 'direction', width: 10 },
+      { header: '访查时间', key: 'visitedAt', width: 10 },
+      { header: '自我验证', key: 'selfImgUrl', width: 15 },
       { header: '审核状态', key: 'auditStatus', width: 15 },
+      { header: '提交时间', key: 'createdAt', width: 15 },
       { header: '评价', key: 'comment', width: 30 },
       { header: '区域', key: 'areaName', width: 15 },
       { header: '位置', key: 'locationName', width: 30 },
@@ -112,15 +119,11 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     let currentRow = 2;
 
     // 第一步：先创建所有行数据（不处理图片）
-    const imageTasks: { row: number; imgKey: string }[] = [];
+    const imageTasks: { row: number; imgUrl: string }[] = [];
 
     for (const item of data) {
       for (let i = 0; i < item.details.length; i++) {
         const subItem = item.details[i];
-        let url = '';
-        if (subItem.imgKey) {
-          url = new Qiniu().getDownloadUrl(subItem.imgKey, 24);
-        }
         const rowData = {
           realName: i === 0 ? item.realName : '',
           idNo: i === 0 ? item.idNo : '',
@@ -128,11 +131,14 @@ export class FeedService extends BaseCrudService<FeedEntity> {
           city: i === 0 ? item.city : '',
           serviceArea: i === 0 ? item.serviceArea : '',
           direction: i === 0 ? item.direction : '',
+          selfImgUrl: i === 0 ? item.selfImgUrl : '',
+          visitedAt: i === 0 ? item.visitedAt : '',
           auditStatus: i === 0 ? auditStatusMap[item.auditStatus] : '',
           comment: i === 0 ? item.comment : '',
+          createdAt: i === 0 ? item.createdAt : '',
           areaName: subItem.areaName,
           locationName: subItem.locationName,
-          url: url,
+          url: subItem.imgUrl,
         };
 
         const row = worksheet.addRow(rowData);
@@ -140,10 +146,10 @@ export class FeedService extends BaseCrudService<FeedEntity> {
         this.setRowStyle(row, currentRow, i);
 
         // 记录需要处理图片的行
-        if (subItem.imgKey && !subItem.isVideo) {
+        if (subItem.imgUrl && !subItem.isVideo) {
           imageTasks.push({
             row: currentRow,
-            imgKey: subItem.imgKey,
+            imgUrl: subItem.imgUrl,
           });
         }
 
@@ -157,8 +163,8 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     if (!onlyUrl) {
       // 第二步：单独处理所有图片
       for (const task of imageTasks) {
-        console.log(`开始处理第${task.row}行图片: ${task.imgKey}`);
-        await this.addQiniuImageToCell(worksheet, task.imgKey, task.row);
+        console.log(`开始处理第${task.row}行图片: ${task.imgUrl}`);
+        await this.addQiniuImageToCell(worksheet, task.imgUrl, task.row);
       }
     }
 
@@ -168,15 +174,12 @@ export class FeedService extends BaseCrudService<FeedEntity> {
 
   private async addQiniuImageToCell(
     worksheet: ExcelJS.Worksheet,
-    imageKey: string,
+    imageUrl: string,
     currentRow: number,
   ): Promise<void> {
     try {
-      console.log(`正在下载图片: ${imageKey}`);
+      console.log(`正在下载图片: ${imageUrl}`);
 
-      // 从七牛云获取图片 buffer
-      const imageUrl = new Qiniu().getDownloadUrl(imageKey);
-      console.log(imageUrl);
       const imageBuffer = await this.downloadImage(imageUrl);
 
       // 获取图片格式
@@ -187,8 +190,8 @@ export class FeedService extends BaseCrudService<FeedEntity> {
         extension: extension as 'png' | 'jpeg' | 'gif',
       });
 
-      // 计算单元格位置（L列是第12列，索引为11）
-      const colIndex = 11;
+      // 计算单元格位置（O列是第15列，索引为14）
+      const colIndex = 14;
       const rowIndex = currentRow - 1;
       console.log('currentRow', currentRow);
       worksheet.addImage(imageId, {
@@ -199,7 +202,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
 
       console.log(`成功添加图片到 k${currentRow}`);
     } catch (error) {
-      console.warn(`添加七牛云图片失败 ${imageKey}:`, error.message);
+      console.warn(`添加七牛云图片失败 ${imageUrl}:`, error.message);
 
       // 添加错误提示
       const cell = worksheet.getCell(`k${currentRow}`);
@@ -314,22 +317,15 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     });
 
     return feed.details.map((m) => {
-      let fileUrl = '';
-      let coverImgUrl = '';
-      if (m.imgKey) {
-        fileUrl = new Qiniu().getDownloadUrl(m.imgKey);
-      }
-      if (m.coverImgKey) {
-        coverImgUrl = new Qiniu().getDownloadUrl(m.coverImgKey);
-      }
+
 
       return {
         areaName: m.areaName,
         locationName: m.locationName,
         isVideo: m.isVideo,
         createdAt: m.createdAt,
-        fileUrl,
-        coverImgUrl,
+        fileUrl: m.imgUrl,
+        coverImgUrl: m.coverImgUrl,
       };
     });
   }

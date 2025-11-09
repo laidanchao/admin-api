@@ -6,6 +6,10 @@ export class FeedDto {
   serviceArea: string;
   direction: string;
   comment: string;
+  location: string;
+  visitedAt: Date;
+  selfImgKey: string;
+  selfImgUrl: string;
   details: FeedDetails[];
 }
 
@@ -20,7 +24,11 @@ export class FeedDetails {
 
   imgKey: string;
 
+  imgUrl: string;
+
   coverImgKey: string;
+
+  coverImgUrl: string;
 
   isVideo: boolean;
 }
