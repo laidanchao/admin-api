@@ -58,7 +58,13 @@ export class FileService {
     return new Qiniu().getDownloadUrl(key);
   }
 
-  getQiNiuToken() {
-    return new Qiniu().getToken();
+  getQiNiuToken({ key, originalText }) {
+    const token = new Qiniu().getToken();
+    const waterMarkOptions = `watermark/2/text/${qiniu.util.urlsafeBase64Encode(originalText)}/fontsize/800/fill/I0ZGRkZGRg==`;
+    const imgUrl = `${process.env.QINIU_DOMAIN}/${key}?${waterMarkOptions}`;
+    return {
+      token,
+      imgUrl,
+    };
   }
 }

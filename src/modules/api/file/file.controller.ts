@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -51,8 +52,8 @@ export class FileController {
   /**
    * 获取七牛token
    */
-  @Get('getQiNiuToken')
-  getQiNiuToken(){
-    return this.fileService.getQiNiuToken();
+  @Post('getQiNiuToken')
+  getQiNiuToken(@Body() body: { key: string; originalText: string }) {
+    return this.fileService.getQiNiuToken(body);
   }
 }
