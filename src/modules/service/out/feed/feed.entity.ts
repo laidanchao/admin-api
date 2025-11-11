@@ -5,6 +5,9 @@ import { FeedDetailEntity } from '@/modules/service/out/feed/feed-detail.entity'
 
 @Entity({ name: 'out_feed' })
 export class FeedEntity extends CompleteEntity {
+  @Column({ nullable: true })
+  clientId: number;
+
   @Column({ length: 50 })
   realName: string;
 

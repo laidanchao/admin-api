@@ -8,7 +8,6 @@ import { FeedAuditStatus } from '@/common/enums';
 import { FeedDetailEntity } from '@/modules/service/out/feed/feed-detail.entity';
 import * as ExcelJS from 'exceljs';
 
-
 @Injectable()
 export class FeedService extends BaseCrudService<FeedEntity> {
   constructor(
@@ -22,6 +21,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
 
   async save(body: FeedDto) {
     const feed = await this.repo.save({
+      clientId: body.clientId,
       idNo: body.idNo,
       phone: body.phone,
       realName: body.realName,
@@ -317,8 +317,6 @@ export class FeedService extends BaseCrudService<FeedEntity> {
     });
 
     return feed.details.map((m) => {
-
-
       return {
         areaName: m.areaName,
         locationName: m.locationName,

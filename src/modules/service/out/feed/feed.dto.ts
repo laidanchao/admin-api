@@ -1,4 +1,5 @@
 export class FeedDto {
+  clientId: number;
   realName: string;
   idNo: string;
   phone: string;

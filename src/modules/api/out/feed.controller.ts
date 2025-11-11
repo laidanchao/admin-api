@@ -52,4 +52,9 @@ export class FeedController {
 
     res.send(buffer);
   }
+
+  @Get('getList/:clientId')
+  async getList(@Param('clientId') clientId: number) {
+    return this.service.repo.findBy({ clientId: clientId });
+  }
 }

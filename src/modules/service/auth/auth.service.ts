@@ -88,13 +88,17 @@ export class AuthService {
     }
 
     // 生成token返回
-    return this.jwtService.sign({
-      id: client.id,
+    return {
+      token: this.jwtService.sign({
+        id: client.id,
+        realName: client.realName,
+        idNo: client.idNo,
+        phone: client.phone,
+        userType: 'client',
+      }),
       realName: client.realName,
-      idNo: client.idNo,
-      phone: client.phone,
-      userType: 'client',
-    });
+      clientId: client.id,
+    };
   }
 
   /**
