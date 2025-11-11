@@ -6,10 +6,11 @@ import { AuthService } from '@/modules/service/auth/auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '@/modules/service/sys/user/user.entity';
 import Utils from '@/common/utils';
+import { ClientEntity } from '@/modules/service/crm/client/client.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, ClientEntity]),
     JwtModule.register({
       secret: Utils.getEnv<string>('JWT_KEY'),
       signOptions: { expiresIn: '7d' },
