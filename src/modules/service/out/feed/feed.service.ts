@@ -327,4 +327,13 @@ export class FeedService extends BaseCrudService<FeedEntity> {
       };
     });
   }
+
+  async getOriginDetails(id: number) {
+    const feed = await this.repo.findOne({
+      where: { id },
+      relations: ['details'],
+    });
+
+    return feed.details;
+  }
 }

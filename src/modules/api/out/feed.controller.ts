@@ -57,4 +57,9 @@ export class FeedController {
   async getList(@Param('clientId') clientId: number) {
     return this.service.repo.findBy({ clientId: clientId });
   }
+
+  @Get('originDetails/:id')
+  originDetails(@Param('id') id: number) {
+    return this.service.getOriginDetails(id);
+  }
 }
