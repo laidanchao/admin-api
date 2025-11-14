@@ -98,6 +98,8 @@ export class AuthService {
       }),
       realName: client.realName,
       clientId: client.id,
+      idNo: client.idNo,
+      phone: client.phone
     };
   }
 

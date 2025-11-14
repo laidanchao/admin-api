@@ -1,4 +1,5 @@
 export class FeedDto {
+  id?: number;
   clientId: number;
   realName: string;
   idNo: string;
@@ -15,6 +16,10 @@ export class FeedDto {
 }
 
 export class FeedDetails {
+  id?: number;
+
+  feedId?: number;
+
   areaCode: string;
 
   areaName: string;

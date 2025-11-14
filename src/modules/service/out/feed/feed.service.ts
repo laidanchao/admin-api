@@ -21,6 +21,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
 
   async save(body: FeedDto) {
     const feed = await this.repo.save({
+      id: body.id,
       clientId: body.clientId,
       idNo: body.idNo,
       phone: body.phone,
@@ -39,7 +40,8 @@ export class FeedService extends BaseCrudService<FeedEntity> {
 
     const details = body.details.map((m) => {
       return FeedDetailEntity.create({
-        feedId: feed.id,
+        id: m.id,
+        feedId: m.feedId || feed.id,
         areaCode: m.areaCode,
         areaName: m.areaName,
         locationCode: m.locationCode,
