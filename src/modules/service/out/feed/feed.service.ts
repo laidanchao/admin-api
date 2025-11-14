@@ -7,6 +7,7 @@ import { FeedDto } from '@/modules/service/out/feed/feed.dto';
 import { FeedAuditStatus } from '@/common/enums';
 import { FeedDetailEntity } from '@/modules/service/out/feed/feed-detail.entity';
 import * as ExcelJS from 'exceljs';
+import _ from 'lodash';
 
 @Injectable()
 export class FeedService extends BaseCrudService<FeedEntity> {
@@ -318,7 +319,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
       relations: ['details'],
     });
 
-    return feed.details.map((m) => {
+    return _.orderBy(feed.details, ['locationCode']).map((m) => {
       return {
         areaName: m.areaName,
         locationName: m.locationName,
