@@ -81,6 +81,7 @@ export class FeedService extends BaseCrudService<FeedEntity> {
       .andWhere(body.auditStatus ? 'feed.auditStatus = :auditStatus' : '1=1', {
         auditStatus: body.auditStatus,
       })
+      .orderBy('detail.locationCode', 'ASC')
       .getMany();
 
     return this.exportWithImages(feeds, body.onlyUrl);
