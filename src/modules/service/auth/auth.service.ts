@@ -1,14 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '@/modules/service/sys/user/user.entity';
-import { ClientStage, UserStatus } from '@/common/enums';
+import { ClientStage, ClientType, UserStatus } from '@/common/enums';
 import { JwtService } from '@nestjs/jwt';
 import { aesEncrypt } from '@/common/crypt';
 import { ClientEntity } from '@/modules/service/crm/client/client.entity';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
+  // 微信小程序配置
+  private readonly WX_APPID = process.env.WX_APPID;
+  private readonly WX_SECRET = process.env.WX_SECRET;
+
   constructor(
     @InjectRepository(UserEntity)
     public readonly userRepo: Repository<UserEntity>,
@@ -65,7 +72,7 @@ export class AuthService {
 
     // 查找是否存在该身份证号的用户
     let client = await this.clientRepo.findOne({
-      where: { idNo },
+      where: [{ idNo }, { phone }],
     });
 
     if (!client) {
@@ -99,8 +106,113 @@ export class AuthService {
       realName: client.realName,
       clientId: client.id,
       idNo: client.idNo,
-      phone: client.phone
+      phone: client.phone,
     };
+  }
+
+  /**
+   * 微信小程序登录
+   * 对应微信小程序的wx.login()函数
+   * @param code 微信小程序登录获取的code
+   * @param userInfo 微信用户信息（可选）
+   */
+  async wxLogin(
+    code: string,
+    userInfo?: {
+      nickname: string;
+      avatarUrl: string;
+      gender: number;
+      country: string;
+      province: string;
+      city: string;
+      language: string;
+    },
+  ) {
+    if (!code) {
+      throw new BadRequestException('登录凭证不能为空');
+    }
+
+    try {
+      // 1. 调用微信接口获取openid和session_key
+      const wxResponse = await this.getWxOpenid(code);
+
+      // 2. 检查微信返回结果
+      if (wxResponse.errcode) {
+        this.logger.error(`微信登录失败: ${wxResponse.errmsg}`);
+        throw new BadRequestException(`微信登录失败: ${wxResponse.errmsg}`);
+      }
+
+      const { openid, unionid } = wxResponse;
+
+      // 3. 根据openid查找或创建用户
+      let client = await this.clientRepo.findOne({
+        where: { openid },
+      });
+
+      if (!client) {
+        // 3.1 不存在则创建新用户
+        client = this.clientRepo.create({
+          openid,
+          unionid: unionid || null,
+          clientName: userInfo?.nickname || `微信用户${openid.slice(-4)}`,
+          clientType: ClientType.PERSONAL,
+          clientStage: ClientStage.DEFAULT,
+          createdBy: 'system',
+        });
+      }
+
+      // 4. 更新用户信息（如果提供了）
+      if (userInfo) {
+        client.nickname = userInfo.nickname;
+        client.avatar = userInfo.avatarUrl;
+        client.gender = userInfo.gender;
+        client.wxCountry = userInfo.country;
+        client.wxProvince = userInfo.province;
+        client.wxCity = userInfo.city;
+        client.language = userInfo.language;
+      }
+
+      // 5. 保存用户信息
+      await this.clientRepo.save(client);
+
+      // 6. 生成token
+      const token = this.jwtService.sign({
+        id: client.id,
+        openid: client.openid,
+        userType: 'wechat_client',
+      });
+
+      // 7. 返回登录结果
+      return {
+        token,
+        clientId: client.id,
+        openid: client.openid,
+        nickname: client.nickname,
+        avatar: client.avatar,
+        isNewUser: !client.idNo && !client.phone, // 判断是否需要补充信息
+      };
+    } catch (error) {
+      this.logger.error('微信登录过程中发生错误', error.stack);
+      throw new BadRequestException('微信登录失败，请稍后重试');
+    }
+  }
+
+  /**
+   * 调用微信接口获取openid和session_key
+   * @param code 微信登录code
+   */
+  private async getWxOpenid(code: string): Promise<any> {
+    const url = `https://api.weixin.qq.com/sns/jscode2session`;
+    const params = {
+      appid: this.WX_APPID,
+      secret: this.WX_SECRET,
+      js_code: code,
+      grant_type: 'authorization_code',
+    };
+
+    this.logger.log(`正在请求微信接口，appid: ${this.WX_APPID}, code: ${code}`);
+    const response = await axios.get(url, { params });
+    return response.data;
   }
 
   /**

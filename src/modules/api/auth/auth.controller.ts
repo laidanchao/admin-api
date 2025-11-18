@@ -24,11 +24,35 @@ export class AuthController {
    */
   @Public()
   @Post('client-login')
-  async clientLoginRegister(@Body() body: { realName: string; idNo: string; phone: string }) {
+  async clientLoginRegister(
+    @Body() body: { realName: string; idNo: string; phone: string },
+  ) {
     return await this.service.clientLoginRegister(
       body.realName,
       body.idNo,
-      body.phone
+      body.phone,
     );
+  }
+
+  /**
+   * 微信小程序登录接口
+   * 对应微信小程序的wx.login()函数
+   */
+  @Post('wx-login')
+  @Public()
+  async wxLogin(
+    @Body('code') code: string,
+    @Body('userInfo')
+    userInfo?: {
+      nickname: string;
+      avatarUrl: string;
+      gender: number;
+      country: string;
+      province: string;
+      city: string;
+      language: string;
+    },
+  ) {
+    return this.service.wxLogin(code, userInfo);
   }
 }
