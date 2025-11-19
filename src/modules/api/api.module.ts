@@ -6,6 +6,7 @@ import { AuthApiModule } from '@/modules/api/auth/auth.api.module';
 import { OmsApiModule } from '@/modules/api/oms/oms.api.module';
 import { DashboardController } from '@/modules/api/dashboard.controller';
 import { FeedApiModule } from '@/modules/api/out/feed.api.module';
+import { VideoApiModule } from '@/modules/api/out/video.api.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FeedApiModule } from '@/modules/api/out/feed.api.module';
     AuthApiModule,
     OmsApiModule,
     FeedApiModule,
+    VideoApiModule,
   ],
   exports: [
     SysApiModule,
@@ -23,6 +25,7 @@ import { FeedApiModule } from '@/modules/api/out/feed.api.module';
     AuthApiModule,
     OmsApiModule,
     FeedApiModule,
+    VideoApiModule,
   ],
   controllers: [DashboardController],
 })
