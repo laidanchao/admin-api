@@ -1,6 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
 import { AuthService } from '@/modules/service/auth/auth.service';
 import { Public } from '@/common/public.decorator';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -41,7 +43,8 @@ export class AuthController {
   @Post('wx-login')
   @Public()
   async wxLogin(
-    @Body('code') code: string,
+    @Body('loginCode') loginCode: string,
+    @Body('phoneCode') phoneCode: string,
     @Body('userInfo')
     userInfo?: {
       nickname: string;
@@ -53,6 +56,6 @@ export class AuthController {
       language: string;
     },
   ) {
-    return this.service.wxLogin(code, userInfo);
+    return this.service.wxLogin(loginCode, phoneCode, userInfo);
   }
 }
