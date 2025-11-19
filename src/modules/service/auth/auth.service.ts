@@ -202,6 +202,7 @@ export class AuthService {
       // 7. 返回登录结果
       return {
         token,
+        phone: client.phone,
         clientId: client.id,
         openid: client.openid,
         nickname: client.nickname,
