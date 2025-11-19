@@ -340,4 +340,11 @@ export class FeedService extends BaseCrudService<FeedEntity> {
 
     return feed.details;
   }
+
+  async delete(id: number) {
+    await this.detailRepo.delete({
+      feedId: id,
+    });
+    await this.repo.delete(id);
+  }
 }

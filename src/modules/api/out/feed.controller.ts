@@ -62,4 +62,9 @@ export class FeedController {
   originDetails(@Param('id') id: number) {
     return this.service.getOriginDetails(id);
   }
+
+  @Post('delete')
+  delete(@Body() body: { id: number }) {
+    return this.service.delete(body.id);
+  }
 }
