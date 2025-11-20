@@ -52,6 +52,7 @@ export class VideoHistoryService extends BaseCrudService<VideoHistoryEntity> {
         history = this.videoHistoryRepository.create({
           ...historyData,
           isCompleted: historyData.isCompleted || false,
+          createdBy: 'system'
         });
         history = await this.videoHistoryRepository.save(history);
         this.logger.debug(`创建观看历史成功，ID: ${history.id}`);
