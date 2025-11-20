@@ -18,10 +18,10 @@ export class VideoHistoryEntity extends CompleteEntity {
   isCompleted: boolean;
 
   @ManyToOne(() => ClientEntity, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'clientId' })
+  @JoinColumn({ name: 'client_id' })
   client: Relation<ClientEntity>;
 
   @ManyToOne(() => VideoEntity, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'videoId' })
+  @JoinColumn({ name: 'video_id' })
   video: Relation<VideoEntity>;
 }
