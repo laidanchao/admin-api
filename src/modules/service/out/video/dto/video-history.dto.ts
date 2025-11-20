@@ -26,9 +26,6 @@ export class SaveVideoHistoryDto {
   position: number;
 
   @IsOptional()
-  lastPlayTime?: Date;
-
-  @IsOptional()
   @IsBoolean({ message: '是否已看完必须是布尔值' })
   isCompleted?: boolean;
 }
@@ -44,8 +41,6 @@ export class VideoHistoryResponseDto {
   videoId: number;
 
   position: number;
-
-  lastPlayTime?: Date;
 
   isCompleted: boolean;
 
@@ -70,7 +65,6 @@ export class VideoHistoryResponseDto {
     dto.clientId = entity.clientId;
     dto.videoId = entity.videoId;
     dto.position = entity.position;
-    dto.lastPlayTime = entity.lastPlayTime;
     dto.isCompleted = entity.isCompleted;
     dto.createdAt = entity.createdAt;
     dto.updatedAt = entity.updatedAt;

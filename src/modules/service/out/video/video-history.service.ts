@@ -29,7 +29,7 @@ export class VideoHistoryService extends BaseCrudService<VideoHistoryEntity> {
   }): Promise<VideoHistoryEntity> {
     try {
       this.logger.debug(`保存/更新观看历史: ${JSON.stringify(historyData)}`);
-      
+
       // 查找是否已存在观看历史
       let history = await this.videoHistoryRepository.findOne({
         where: {
@@ -41,8 +41,9 @@ export class VideoHistoryService extends BaseCrudService<VideoHistoryEntity> {
       if (history) {
         // 更新现有历史
         history.position = historyData.position;
-        history.lastPlayTime = historyData.lastPlayTime || new Date();
-        history.isCompleted = historyData.isCompleted || history.isCompleted;
+        if (!history.isCompleted) {
+          history.isCompleted = historyData.isCompleted || history.isCompleted;
+        }
         history.updatedBy = historyData.createdBy;
         history = await this.videoHistoryRepository.save(history);
         this.logger.debug(`更新观看历史成功，ID: ${history.id}`);
@@ -50,7 +51,6 @@ export class VideoHistoryService extends BaseCrudService<VideoHistoryEntity> {
         // 创建新历史
         history = this.videoHistoryRepository.create({
           ...historyData,
-          lastPlayTime: historyData.lastPlayTime || new Date(),
           isCompleted: historyData.isCompleted || false,
         });
         history = await this.videoHistoryRepository.save(history);
@@ -67,22 +67,31 @@ export class VideoHistoryService extends BaseCrudService<VideoHistoryEntity> {
   /**
    * 获取用户的观看历史列表
    */
-  async getClientHistoryList(clientId: number, limit: number = 20, offset: number = 0): Promise<VideoHistoryEntity[]> {
+  async getClientHistoryList(
+    clientId: number,
+    limit: number = 20,
+    offset: number = 0,
+  ): Promise<VideoHistoryEntity[]> {
     try {
-      this.logger.debug(`获取用户观看历史，clientId: ${clientId}, limit: ${limit}, offset: ${offset}`);
-      
+      this.logger.debug(
+        `获取用户观看历史，clientId: ${clientId}, limit: ${limit}, offset: ${offset}`,
+      );
+
       const histories = await this.videoHistoryRepository.find({
         where: { clientId },
         relations: ['video'], // 关联查询视频信息
-        order: { lastPlayTime: 'DESC' }, // 按照最后播放时间降序
+        order: { updatedAt: 'DESC' }, // 按照最后播放时间降序
         take: limit,
         skip: offset,
       });
-      
+
       this.logger.debug(`获取用户观看历史成功，数量: ${histories.length}`);
       return histories;
     } catch (error) {
-      this.logger.error(`获取用户观看历史失败，clientId: ${clientId}，错误: ${error.message}`, error.stack);
+      this.logger.error(
+        `获取用户观看历史失败，clientId: ${clientId}，错误: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -90,46 +99,58 @@ export class VideoHistoryService extends BaseCrudService<VideoHistoryEntity> {
   /**
    * 获取用户观看特定视频的历史
    */
-  async getClientVideoHistory(clientId: number, videoId: number): Promise<VideoHistoryEntity | null> {
+  async getClientVideoHistory(
+    clientId: number,
+    videoId: number,
+  ): Promise<VideoHistoryEntity | null> {
     try {
-      this.logger.debug(`获取用户视频历史，clientId: ${clientId}, videoId: ${videoId}`);
-      
+      this.logger.debug(
+        `获取用户视频历史，clientId: ${clientId}, videoId: ${videoId}`,
+      );
+
       const history = await this.videoHistoryRepository.findOne({
         where: { clientId, videoId },
         relations: ['video'],
       });
-      
+
       if (!history) {
-        this.logger.debug(`未找到用户视频历史，clientId: ${clientId}, videoId: ${videoId}`);
+        this.logger.debug(
+          `未找到用户视频历史，clientId: ${clientId}, videoId: ${videoId}`,
+        );
       }
-      
+
       return history;
     } catch (error) {
-      this.logger.error(`获取用户视频历史失败，clientId: ${clientId}, videoId: ${videoId}，错误: ${error.message}`, error.stack);
+      this.logger.error(
+        `获取用户视频历史失败，clientId: ${clientId}, videoId: ${videoId}，错误: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
 
-  /**
-   * 删除用户的观看历史
-   */
-  async deleteClientHistory(clientId: number, videoId?: number): Promise<void> {
-    try {
-      let deleteQuery = { clientId };
-      if (videoId) {
-        deleteQuery = { ...deleteQuery, videoId };
-        this.logger.debug(`删除用户特定视频历史，clientId: ${clientId}, videoId: ${videoId}`);
-      } else {
-        this.logger.debug(`删除用户所有观看历史，clientId: ${clientId}`);
-      }
-      
-      await this.videoHistoryRepository.delete(deleteQuery);
-      this.logger.debug(`删除观看历史成功`);
-    } catch (error) {
-      this.logger.error(`删除观看历史失败: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
+  // /**
+  //  * 删除用户的观看历史
+  //  */
+  // async deleteClientHistory(clientId: number, videoId?: number): Promise<void> {
+  //   try {
+  //     let deleteQuery = { clientId };
+  //     if (videoId) {
+  //       deleteQuery = { ...deleteQuery, videoId };
+  //       this.logger.debug(
+  //         `删除用户特定视频历史，clientId: ${clientId}, videoId: ${videoId}`,
+  //       );
+  //     } else {
+  //       this.logger.debug(`删除用户所有观看历史，clientId: ${clientId}`);
+  //     }
+  //
+  //     await this.videoHistoryRepository.delete(deleteQuery);
+  //     this.logger.debug(`删除观看历史成功`);
+  //   } catch (error) {
+  //     this.logger.error(`删除观看历史失败: ${error.message}`, error.stack);
+  //     throw error;
+  //   }
+  // }
 
   /**
    * 获取视频的观看统计
@@ -140,18 +161,23 @@ export class VideoHistoryService extends BaseCrudService<VideoHistoryEntity> {
   }> {
     try {
       this.logger.debug(`获取视频观看统计，videoId: ${videoId}`);
-      
+
       const [totalViews, completedViews] = await Promise.all([
         this.videoHistoryRepository.count({ where: { videoId } }),
-        this.videoHistoryRepository.count({ where: { videoId, isCompleted: true } }),
+        this.videoHistoryRepository.count({
+          where: { videoId, isCompleted: true },
+        }),
       ]);
-      
+
       return {
         totalViews,
         completedViews,
       };
     } catch (error) {
-      this.logger.error(`获取视频观看统计失败，videoId: ${videoId}，错误: ${error.message}`, error.stack);
+      this.logger.error(
+        `获取视频观看统计失败，videoId: ${videoId}，错误: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -177,7 +203,9 @@ export class VideoHistoryService extends BaseCrudService<VideoHistoryEntity> {
   async updateOne(req: CrudRequest, dto: any): Promise<VideoHistoryEntity> {
     try {
       const id = req.parsed.paramsFilter[0].value;
-      this.logger.debug(`更新观看历史ID: ${id}，更新数据: ${JSON.stringify(dto)}`);
+      this.logger.debug(
+        `更新观看历史ID: ${id}，更新数据: ${JSON.stringify(dto)}`,
+      );
       const result = await super.updateOne(req, dto);
       this.logger.debug(`观看历史更新成功，ID: ${id}`);
       return result;
