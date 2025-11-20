@@ -98,41 +98,41 @@ export class VideoHistoryController {
     }
   }
 
-  // /**
-  //  * 获取用户观看特定视频的历史
-  //  */
-  // @Public()
-  // @Get('client/:clientId/video/:videoId')
-  // async getClientVideoHistory(
-  //   @Param('clientId') clientId: number,
-  //   @Param('videoId') videoId: number,
-  // ) {
-  //   try {
-  //     this.logger.log(
-  //       `获取用户视频历史请求，clientId: ${clientId}, videoId: ${videoId}`,
-  //     );
-  //     const history = await this.service.getClientVideoHistory(
-  //       clientId,
-  //       videoId,
-  //     );
-  //
-  //     if (!history) {
-  //       this.logger.warn(
-  //         `未找到用户视频历史，clientId: ${clientId}, videoId: ${videoId}`,
-  //       );
-  //       return null;
-  //     }
-  //
-  //     this.logger.log(`获取用户视频历史成功，ID: ${history.id}`);
-  //     return VideoHistoryResponseDto.fromEntity(history);
-  //   } catch (error) {
-  //     this.logger.error(
-  //       `获取用户视频历史失败，clientId: ${clientId}, videoId: ${videoId}，错误: ${error.message}`,
-  //       error.stack,
-  //     );
-  //     throw error;
-  //   }
-  // }
+  /**
+   * 获取用户观看特定视频的历史
+   */
+  @Public()
+  @Get('client/:clientId/video/:videoId')
+  async getClientVideoHistory(
+    @Param('clientId') clientId: number,
+    @Param('videoId') videoId: number,
+  ) {
+    try {
+      this.logger.log(
+        `获取用户视频历史请求，clientId: ${clientId}, videoId: ${videoId}`,
+      );
+      const history = await this.service.getClientVideoHistory(
+        clientId,
+        videoId,
+      );
+
+      if (!history) {
+        this.logger.warn(
+          `未找到用户视频历史，clientId: ${clientId}, videoId: ${videoId}`,
+        );
+        return null;
+      }
+
+      this.logger.log(`获取用户视频历史成功，ID: ${history.id}`);
+      return VideoHistoryResponseDto.fromEntity(history);
+    } catch (error) {
+      this.logger.error(
+        `获取用户视频历史失败，clientId: ${clientId}, videoId: ${videoId}，错误: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
+  }
   //
   // /**
   //  * 删除用户的观看历史
