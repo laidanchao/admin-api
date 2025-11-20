@@ -14,7 +14,15 @@ async function bootstrap() {
 
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
-  app.useGlobalPipes(new ValidationPipe()); // 启用装饰器校验
+  app.useGlobalPipes(
+    new ValidationPipe({
+      // 启用装饰器校验
+      transform: true, // 启用自动转换
+      transformOptions: {
+        enableImplicitConversion: true, // 启用隐式转换
+      },
+    }),
+  );
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.setGlobalPrefix('api');
